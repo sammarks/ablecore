@@ -1,0 +1,138 @@
+<?php
+
+use AbleCore\Modules\PathManager;
+require_once('helpers/forms.inc');
+require_once('helpers/menu_hooks.inc');
+
+function ablecore_menu()
+{
+	$paths = PathManager::init()
+		->access(array('administer able core'))
+		->define('admin/config/ablecore', 'system_admin_menu_block_page', 'Able Core', array(
+			'file' => 'system.admin.inc',
+			'file path' => drupal_get_path('module', 'system'),
+			'description' => 'Lists administration actions for Able Core.',
+		))
+		->fin()
+		->fin();
+
+	return $paths;
+}
+
+function ablecore_theme()
+{
+	$themes = array();
+	$themes = array_merge($themes, ablecore_menu_hooks_theme());
+	return $themes;
+}
+
+function ablecore_permission()
+{
+	return array(
+		'administer able core' => array(
+			'title' => t('Administer Able Core'),
+			'description' => t('Perform administrative tasks for the Able Core module.'),
+		),
+	);
+}
+
+function ablecore_xautoload($api)
+{
+	$api->add('AbleCore\\', 'lib');
+}
+
+// Register hooks for "submodules"
+function ablecore_forms($form_id, $args)
+{
+	$result = array();
+	$result = array_merge($result, ablecore_forms_forms($form_id, $args));
+	return $result;
+}
+
+/**
+ * Add default themes for all block implementations.
+ *
+ * @param  array  $data  Existing data for hook_block_view.
+ * @param  object $block The block.
+ *
+ * @return void
+ */
+function ablecore_block_view_alter(&$data, $block)
+{
+
+	// First check to see if a theme hook exists.
+	$hooks = theme_get_registry(false);
+	$candidates = array(
+		'block_' . $block->delta,
+	);
+	$candidate = -1;
+	foreach ($candidates as $possible) {
+		if (isset($hooks[$possible])) {
+			$candidate = $possible;
+			break;
+		}
+	}
+	if ($candidate == -1) return;
+
+	// Create a data array if it's null.
+	if (!$data) {
+		$data = array();
+	}
+
+	if (is_array($data) && !array_key_exists('subject', $data)) {
+		$data['subject'] = '';
+	}
+	if (is_array($data) && !array_key_exists('content', $data)) {
+		$data['content'] = array();
+	}
+	if (is_array($data['content']) && !array_key_exists('#theme', $data['content'])) {
+		$data['content']['#theme'] = $candidate;
+	}
+
+}
+
+function ablecore_theme_registry_alter(&$registry)
+{
+	// Search through the registry and update module paths.
+	foreach ($registry as $key => &$item) {
+
+		// Narrow down our results.
+		if ($item['type'] != 'module' && $item['type'] != 'theme_engine') continue;
+		if (!array_key_exists('template', $item)) continue;
+		if (!array_key_exists('variables', $item) || !array_key_exists('ablecore', $item['variables'])
+			|| $item['variables']['ablecore'] != 'yes'
+		) continue;
+
+		// Delete the identifying ablecore variable.
+		unset($registry[$key]['variables']['ablecore']);
+
+		// Clear the variables array if no more exist.
+		if (count($registry[$key]['variables']) <= 0) {
+			unset($registry[$key]['variables']);
+		}
+
+		// Set some base variables.
+		$path = str_replace('//', '/', DRUPAL_ROOT . '/' . $item['template']);
+		$segments = explode('/', $path);
+		$filename = array_pop($segments);
+
+		// Get the module path.
+		$module_path = $registry[$key]['theme path'];
+
+		// Prepare preprocessor paths.
+		$preprocess_filename = '/' . preg_quote($filename . '.php') . '/';
+		$preprocess_path = null;
+		$results = file_scan_directory(DRUPAL_ROOT . '/' . $module_path, $preprocess_filename);
+		foreach ($results as $file) {
+			$preprocess_path = $file->uri;
+			break;
+		}
+
+		// Include the preprocessor file.
+		if ($preprocess_path !== null) {
+			$registry[$key]['includes'][] = str_replace(DRUPAL_ROOT . '/', '', $preprocess_path);
+			$registry[$key]['preprocess functions'][] = 'preprocess_' . str_replace('-', '_', $filename);
+		}
+
+	}
+}

@@ -1,0 +1,154 @@
+<?php
+
+use AbleCore\Modules\PathManager;
+use Drupal\ablecore_menu\MenuPathRelationship;
+use Drupal\ablecore_menu\ListForm;
+use Drupal\ablecore_menu\EditForm;
+use Drupal\ablecore_menu\DeleteForm;
+
+function ablecore_menu_menu()
+{
+	return PathManager::init()
+		->access(array('administer able core menu'))
+		->define('admin/config/ablecore/menu-relationships', 'admin@list', 'Menu Relationships')
+		->define('admin/config/ablecore/menu-relationships/create', 'admin@create', 'Create Relationship', array(
+			'type' => MENU_LOCAL_ACTION,
+		))
+		->define('admin/config/ablecore/menu-relationships/%/edit', 'admin@edit', 'Edit Relationship')
+		->define('admin/config/ablecore/menu-relationships/%/delete', 'admin@delete', 'Delete Relationship')
+		->fin()
+		->fin();
+}
+
+function ablecore_menu_permission()
+{
+	return array(
+		'administer able core menu' => array(
+			'title' => t('Administer Able Core Menu'),
+			'description' => t('Perform administrative actions on the Able Core Menu module.'),
+		),
+	);
+}
+
+function ablecore_menu_theme()
+{
+	return array(
+		'ablecore_menu_list_relationships' => array(
+			'render element' => 'form',
+			'file' => 'ablecore_menu.admin.inc',
+		),
+	);
+}
+
+function ablecore_menu_ablecore_form_info()
+{
+	return array(
+		'ablecore_menu_list_relationships' => new ListForm(),
+		'ablecore_menu_edit_relationship' => new EditForm(),
+		'ablecore_menu_delete_relationship' => new DeleteForm(),
+	);
+}
+
+function ablecore_menu_init()
+{
+	// Get the current menu item and modify the menu tree path.
+	$active_item = ablecore_menu_get_preferred_link();
+	if ($active_item === false) return;
+
+	menu_tree_set_path($active_item['menu_name'], $active_item['link_path']);
+
+	// Build the active trail for the menu item.
+	$parents = array($active_item);
+	while($parents[0]['plid'] !== '0') {
+		array_unshift($parents, menu_link_load($parents[0]['plid']));
+	}
+	$active_trail = menu_get_active_trail();
+	for ($i = 0; $i < count($parents); $i++) {
+		$active_trail[$i + 1] = $parents[$i];
+	}
+	menu_set_active_trail($active_trail);
+}
+
+/**
+ * ablecore_menu_get_path_relationships
+ *
+ * Gets the path relationships from the database, sorted ascending by weight.
+ *
+ * @return array The path relationships.
+ */
+function ablecore_menu_get_path_relationships()
+{
+	$results = db_select('ablecore_menu_item_path', 't')
+		->fields('t')
+		->orderBy('weight')
+		->execute()
+		->fetchAll();
+	$result_objects = array();
+	foreach ($results as $result) {
+		$result_object = new MenuPathRelationship();
+		$result_object->setDefinition($result);
+		$result_objects[$result_object->get('pid')] = $result_object;
+	}
+
+	return $result_objects;
+}
+
+/**
+ * ablecore_menu_get_path_relationship
+ *
+ * Gets a specific path relationship.
+ *
+ * @param string $identifier A menu path relationship ID.
+ *
+ * @return bool|MenuPathRelationship FALSE if one could not be found, the relationship if found.
+ */
+function ablecore_menu_get_path_relationship($identifier)
+{
+	return MenuPathRelationship::load($identifier);
+}
+
+/**
+ * ablecore_menu_get_preferred_link
+ *
+ * Gets the preferred link for the current page.
+ *
+ * @return bool|array FALSE if a preferred link couldn't be found.
+ *                    The loaded menu link if it was found.
+ */
+function ablecore_menu_get_preferred_link()
+{
+	$preferred_link = &drupal_static(__FUNCTION__);
+	if (!isset($preferred_link)) {
+
+		// Get the current path of the page.
+		$current_path = drupal_get_path_alias();
+
+		// Find the first relationship that matches.
+		$relationships = ablecore_menu_get_path_relationships();
+		foreach ($relationships as $relationship) {
+			if ($relationship->match($current_path)) {
+				return $preferred_link = $relationship->menuLink();
+			}
+		}
+
+		// Default to false.
+		return $preferred_link = false;
+
+	}
+	return $preferred_link;
+}
+
+/**
+ * ablecore_menu_get_active_title
+ *
+ * Gets the active title for the current page based on what's configured in the
+ * database. Else it returns false.
+ *
+ * @return bool|null|string
+ */
+function ablecore_menu_get_active_title()
+{
+	if (ablecore_menu_get_preferred_link() !== false) {
+		return drupal_get_title();
+	} else return false;
+}

@@ -1,0 +1,9 @@
+name = Able Core Menu
+description = An expansion to the Drupal menu API for Able Core.
+core = 7.x
+package = Able Core
+
+dependencies[] = ablecore
+dependencies[] = xautoload
+
+files[] = ablecore_menu.admin.inc
