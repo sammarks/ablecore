@@ -27,6 +27,9 @@ Able Core introduces syntactic sugar wherever it can and has the following ultim
 Basically, you shouldn't have to write thousands of lines of code to get a decent site setup with
 Drupal.
 
+Able Core is sponsored by [Able Engine,](http://ableengine.com/) a web services company located in
+Lexington, Kentucky.
+
 ## File Structure
 
 Able Core employs specific naming conventions. Therefore, in order to use Able Core to its fullest,
