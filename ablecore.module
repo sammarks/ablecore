@@ -103,10 +103,11 @@ function ablecore_theme_registry_alter(&$registry)
 		if ($item['type'] != 'module' && $item['type'] != 'theme_engine') continue;
 		if (!array_key_exists('template', $item)) continue;
 		if (!array_key_exists('variables', $item) || !array_key_exists('ablecore', $item['variables'])
-			|| $item['variables']['ablecore'] != 'yes'
+			|| !is_array($item['variables']['ablecore']) || !array_key_exists('module', $item['variables']['ablecore'])
 		) continue;
 
 		// Delete the identifying ablecore variable.
+		$module = $registry[$key]['variables']['ablecore']['module'];
 		unset($registry[$key]['variables']['ablecore']);
 
 		// Clear the variables array if no more exist.
