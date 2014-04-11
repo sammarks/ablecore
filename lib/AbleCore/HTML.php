@@ -14,7 +14,8 @@ class HTML {
 		$variables = array();
 		switch($options['type']) {
 			case 'theme':
-				$variables['path'] = path_to_theme() . '/' . $source;
+				global $theme;
+				$variables['path'] = drupal_get_path('theme', $theme) . '/' . $source;
 				break;
 			default:
 				$variables['path'] = $source;
