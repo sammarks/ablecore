@@ -121,7 +121,7 @@ function ablecore_theme_registry_alter(&$registry)
 		$filename = array_pop($segments);
 
 		// Get the module path.
-		$module_path = $registry[$key]['theme path'];
+		$module_path = drupal_get_path('module', $module);
 
 		// Prepare preprocessor paths.
 		$preprocess_filename = '/' . preg_quote($filename . '.php') . '/';
