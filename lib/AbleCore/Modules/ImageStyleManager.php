@@ -36,4 +36,9 @@ class ImageStyleManager {
 		return $this->define($name, $label, $effects);
 	}
 
+	public function fin()
+	{
+		return $this->generated;
+	}
+
 }
