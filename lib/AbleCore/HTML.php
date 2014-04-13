@@ -41,4 +41,10 @@ class HTML {
 		return theme('image', $variables);
 	}
 
+	public static function absImage($source, $alt = '', $title = '', array $attributes = array(), array $options = array())
+	{
+		$options['type'] = 'absolute';
+		return self::image($source, $alt, $title, $attributes, $options);
+	}
+
 } 
