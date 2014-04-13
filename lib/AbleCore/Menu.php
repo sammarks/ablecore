@@ -252,7 +252,7 @@ class Menu
 
 		// Build the static cache key based on the parameters.
 		$cache_key = $menu_name . '|' . serialize($parameters);
-		if (!array_key_exists($cache_key, $cache)) {
+		if (!isset($cache[$cache_key])) {
 			$cache[$cache_key] = menu_build_tree($menu_name, $parameters);
 		}
 
