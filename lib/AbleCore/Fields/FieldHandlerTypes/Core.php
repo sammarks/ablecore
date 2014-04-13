@@ -14,6 +14,7 @@ class Core extends FieldValueHandler
 	public static $configuration = array(
 		'file' => 'file',
 		'image' => 'image',
+		'imagefield_crop' => 'image',
 		'list_integer' => 'simple',
 		'list_float' => 'simple',
 		'list_text' => 'simple',
