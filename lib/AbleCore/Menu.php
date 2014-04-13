@@ -169,13 +169,23 @@ class Menu
 	{
 		$menu_tree_options = array();
 		$menu_tree_options['max_depth'] = $this->depth;
-		$menu_tree_options['active_trail'] = menu_get_active_trail();
+
+		// Prepare the active trail.
+		$active_trail = menu_get_active_trail();
+		$menu_tree_options['active_trail'] = array();
+		foreach ($active_trail as $menu_link) {
+			if (!isset($menu_link['mlid'])) continue;
+			$menu_tree_options['active_trail'][] = $menu_link['mlid'];
+		}
 
 		if (!$this->expand_all) {
 			$parents = array();
-			foreach (menu_get_active_trail() as $menu_item) {
+			foreach ($active_trail as $menu_item) {
 				if (!array_key_exists('mlid', $menu_item)) continue;
-				$parents[$menu_item['mlid']] = $menu_item['mlid'];
+				$parents[] = $menu_item['mlid'];
+			}
+			if (!$this->parent) {
+				array_unshift($parents, 0);
 			}
 			$menu_tree_options['expanded'] = $parents;
 		}
@@ -192,9 +202,10 @@ class Menu
 
 		$menu_tree = array();
 		if ($this->include_parent_as_first && isset($parent_link)) {
-			$menu_tree = menu_build_tree($this->menu['menu_name'], array(
-				'conditions' => array('mlid' => $parent_link['mlid']),
-			));
+			$menu_tree = menu_build_tree($this->menu['menu_name'],
+				array(
+					'conditions' => array('mlid' => $parent_link['mlid']),
+				));
 		}
 
 		$menu_tree_no_parent = menu_build_tree($this->menu['menu_name'], $menu_tree_options);
@@ -225,7 +236,9 @@ class Menu
 			$this->classes[] = 'menu';
 		}
 		$attributes['class'] = implode(' ', $this->classes);
-		if ($this->id) { $attributes['id'] = $this->id; }
+		if ($this->id) {
+			$attributes['id'] = $this->id;
+		}
 		if (count($attributes) > 0) {
 			$output['#attributes'] = $attributes;
 		}
