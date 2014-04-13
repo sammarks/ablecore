@@ -202,13 +202,13 @@ class Menu
 
 		$menu_tree = array();
 		if ($this->include_parent_as_first && isset($parent_link)) {
-			$menu_tree = menu_build_tree($this->menu['menu_name'],
+			$menu_tree = $this->buildTree($this->menu['menu_name'],
 				array(
 					'conditions' => array('mlid' => $parent_link['mlid']),
 				));
 		}
 
-		$menu_tree_no_parent = menu_build_tree($this->menu['menu_name'], $menu_tree_options);
+		$menu_tree_no_parent = $this->buildTree($this->menu['menu_name'], $menu_tree_options);
 		$menu_tree += $menu_tree_no_parent;
 
 		// Now prepare the output.
@@ -244,6 +244,19 @@ class Menu
 		}
 
 		return render($output);
+	}
+
+	protected function buildTree($menu_name, array $parameters = array())
+	{
+		$cache = &drupal_static(__FUNCTION__);
+
+		// Build the static cache key based on the parameters.
+		$cache_key = $menu_name . '|' . serialize($parameters);
+		if (!isset($cache[$cache_key])) {
+			$cache[$cache_key] = menu_build_tree($menu_name, $parameters);
+		}
+
+		return $cache[$cache_key];
 	}
 
 	protected function addLinkThemes(array &$output)
