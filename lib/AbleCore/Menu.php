@@ -171,13 +171,7 @@ class Menu
 		$menu_tree_options['max_depth'] = $this->depth;
 
 		// Prepare the active trail.
-		$page_data = menu_tree_page_data($this->menu['menu_name'], null, true);
-		$active_trail = array();
-		foreach ($page_data as $item) {
-			$link = $item['link'];
-			$active_trail[] = $link['mlid'];
-		}
-
+		$active_trail = $this->getActiveTrail();
 		$menu_tree_options['active_trail'] = $active_trail;
 
 		if (!$this->expand_all) {
@@ -242,6 +236,33 @@ class Menu
 		}
 
 		return render($output);
+	}
+
+	protected function getActiveTrail()
+	{
+		$cache = &drupal_static(__FUNCTION__);
+		if (!isset($cache[$this->menu['menu_name']])) {
+			$page_data = menu_tree_page_data($this->menu['menu_name'], null, true);
+			$active_trail = array();
+			$items = $page_data;
+			while (count($items) > 0) {
+				$new_items = array();
+				foreach ($items as $item) {
+					$link = $item['link'];
+					if ($link['in_active_trail'] === true) {
+						$active_trail[] = $link['mlid'];
+						if (array_key_exists('below', $item)) {
+							$new_items = $item['below'];
+							break;
+						}
+					}
+				}
+				$items = $new_items;
+			}
+
+			$cache[$this->menu['menu_name']] = $active_trail;
+		}
+		return $cache[$this->menu['menu_name']];
 	}
 
 	protected function buildTree($menu_name, array $parameters = array())
