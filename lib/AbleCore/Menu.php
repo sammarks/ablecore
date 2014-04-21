@@ -250,7 +250,7 @@ class Menu
 				foreach ($items as $item) {
 					$link = $item['link'];
 					if ($link['in_active_trail'] === true) {
-						$active_trail[$link['mlid']] = $link['mlid'];
+						$active_trail[] = $link['mlid'];
 						if (array_key_exists('below', $item)) {
 							$new_items = $item['below'];
 							break;
