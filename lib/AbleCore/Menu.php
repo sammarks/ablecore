@@ -294,7 +294,7 @@ class Menu
 	protected function addActiveTrailClasses(array &$output, array $active_trail = array())
 	{
 		// Are we dealing with a link that goes to the front page?
-		$active_link = menu_link_get_preferred();
+		$active_link = menu_link_get_preferred(null, $this->menu['menu_name']);
 		if ($active_link['href'] == '<front>' || drupal_is_front_page()) {
 			foreach ($output as $key => $link) {
 				if (!is_array($link) || !array_key_exists('#original_link', $link)) continue;
@@ -305,7 +305,7 @@ class Menu
 		}
 
 		if (count($active_trail) <= 0 || !$active_trail) {
-			$active_trail = menu_get_active_trail();
+			$active_trail = $this->getActiveTrail();
 		}
 
 		// Now we need to find an entry point with the current tree.
@@ -313,11 +313,9 @@ class Menu
 		$current_active_trail_index = 0;
 		while ($active_output === false) {
 			if (!array_key_exists($current_active_trail_index, $active_trail)) break;
-			$current_active_trail_item = $active_trail[$current_active_trail_index];
-			if (array_key_exists('mlid', $current_active_trail_item)) {
-				if (array_key_exists($current_active_trail_item['mlid'], $output)) {
-					$active_output = &$output[$current_active_trail_item['mlid']];
-				}
+			$current_active_trail_mlid = $active_trail[$current_active_trail_index];
+			if (array_key_exists($current_active_trail_mlid, $output)) {
+				$active_output = &$output[$current_active_trail_mlid];
 			}
 			$current_active_trail_index++;
 		}
