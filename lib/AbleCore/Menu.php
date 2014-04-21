@@ -171,19 +171,17 @@ class Menu
 		$menu_tree_options['max_depth'] = $this->depth;
 
 		// Prepare the active trail.
-		$active_trail = menu_get_active_trail();
-		$menu_tree_options['active_trail'] = array();
-		foreach ($active_trail as $menu_link) {
-			if (!isset($menu_link['mlid'])) continue;
-			$menu_tree_options['active_trail'][] = $menu_link['mlid'];
+		$page_data = menu_tree_page_data($this->menu['menu_name'], null, true);
+		$active_trail = array();
+		foreach ($page_data as $item) {
+			$link = $item['link'];
+			$active_trail[] = $link['mlid'];
 		}
 
+		$menu_tree_options['active_trail'] = $active_trail;
+
 		if (!$this->expand_all) {
-			$parents = array();
-			foreach ($active_trail as $menu_item) {
-				if (!array_key_exists('mlid', $menu_item)) continue;
-				$parents[] = $menu_item['mlid'];
-			}
+			$parents = $active_trail;
 			if (!$this->parent) {
 				array_unshift($parents, 0);
 			}
