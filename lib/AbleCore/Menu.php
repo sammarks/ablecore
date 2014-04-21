@@ -184,7 +184,6 @@ class Menu
 
 		if ($this->parent) {
 			$parent_link = menu_link_load($this->parent);
-			$menu_tree_options['active_trail'] = array($parent_link['mlid']);
 			$menu_tree_options['only_active_trail'] = false;
 			$menu_tree_options['min_depth'] = $parent_link['depth'] + 1;
 			$menu_tree_options['conditions'] = array(
