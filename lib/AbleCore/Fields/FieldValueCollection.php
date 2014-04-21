@@ -35,21 +35,23 @@ class FieldValueCollection extends \ArrayObject
 		}
 	}
 
-	public function first()
+	public function first($count = 1)
 	{
-		if (count($this) > 0) {
-			return $this[0];
+		$result = $this->range(0, $count);
+		if (is_array($result) && count($result) === 1) {
+			return $result[0];
 		} else {
-			return null;
+			return $result;
 		}
 	}
 
-	public function last()
+	public function last($count = 1)
 	{
-		if (count($this) > 0) {
-			return $this[count($this) - 1];
+		$result = $this->range(count($this) - $count, $count);
+		if (is_array($result) && count($result) === 1) {
+			return $result[0];
 		} else {
-			return null;
+			return $result;
 		}
 	}
 
@@ -60,7 +62,7 @@ class FieldValueCollection extends \ArrayObject
 
 	public function take($length)
 	{
-		return array_slice($this->getArrayCopy(), 0, $length);
+		return $this->first($length);
 	}
 
 	public function unique()
