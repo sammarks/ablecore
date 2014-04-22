@@ -3,6 +3,7 @@
 use AbleCore\Modules\PathManager;
 require_once('helpers/forms.inc');
 require_once('helpers/menu_hooks.inc');
+require_once('helpers/mail.inc');
 
 // Require preprocessors that aren't handled by Able Core.
 require_once('preprocessors/node.inc');
@@ -26,6 +27,7 @@ function ablecore_theme()
 {
 	$themes = array();
 	$themes = array_merge($themes, ablecore_menu_hooks_theme());
+	$themes = array_merge($themes, ablecore_mail_theme());
 	return $themes;
 }
 
