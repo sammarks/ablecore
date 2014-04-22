@@ -33,7 +33,7 @@ abstract class MailerBase {
 		$message = drupal_mail('ablecore', 'handler', $to, language_default(), array(
 			'handler' => $this,
 		), $this->from);
-		if (isset($message['result'])) {
+		if (isset($message['result']) && $message['result']) {
 			return true;
 		} else return false;
 	}
