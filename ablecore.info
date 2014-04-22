@@ -3,3 +3,4 @@ description = "A library for Drupal developers. Provides several convenience uti
 core = 7.x
 package = "Able Core"
 dependencies[] = xautoload
+dependencies[] = menu
