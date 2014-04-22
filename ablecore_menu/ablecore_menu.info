@@ -5,5 +5,6 @@ package = Able Core
 
 dependencies[] = ablecore
 dependencies[] = xautoload
+dependencies[] = menu
 
 files[] = ablecore_menu.admin.inc
