@@ -30,6 +30,17 @@ Drupal.
 Able Core is sponsored by [Able Engine,](http://ableengine.com/) a web services company located in
 Lexington, Kentucky.
 
+## Getting Started
+
+To take advantage of all the benefits of Able Core, you'll have to declare your module as an Able Core module.
+To do this, simply add the following to your module's `.module` file:
+
+	// Declare this module as an Able Core module.
+	function MODULE_ablecore() { }
+
+Simply having the hook present will help Able Core to determine which modules it should expose its advanced
+features to (like auto-inclusion of files inside `helpers/` and `hooks`).
+
 ## File Structure
 
 Able Core employs specific naming conventions. Therefore, in order to use Able Core to its fullest,

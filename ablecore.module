@@ -1,9 +1,7 @@
 <?php
 
 use AbleCore\Modules\PathManager;
-require_once('helpers/forms.inc');
-require_once('helpers/menu_hooks.inc');
-require_once('helpers/mail.inc');
+use AbleCore\Internal\HookUtils;
 
 // Require preprocessors that aren't handled by Able Core.
 require_once('preprocessors/node.inc');
@@ -53,6 +51,18 @@ function ablecore_forms($form_id, $args)
 	$result = array_merge($result, ablecore_forms_forms($form_id, $args));
 	return $result;
 }
+
+function ablecore_init()
+{
+	$ablecore_modules = HookUtils::getAbleCoreModules();
+	foreach ($ablecore_modules as $module) {
+		HookUtils::includeDirectory($module, 'helpers');
+		HookUtils::includeDirectory($module, 'hooks');
+	}
+}
+
+// Declare this module as an Able Core module.
+function ablecore_ablecore() {}
 
 /**
  * Add default themes for all block implementations.
