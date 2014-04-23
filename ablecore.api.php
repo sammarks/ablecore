@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * hook_ablecore
+ *
+ * This hook is required for any modules that want to take advantage of the more advanced
+ * features of Able Core (like automatic file inclusion in the helpers/ and hooks/
+ * directories).
+ */
+function hook_ablecore() {}
+
+/**
  * hook_ablecore_form_info
  *
  * Allows for modules to provide information about the form classes they implement.
