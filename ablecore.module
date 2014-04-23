@@ -54,6 +54,16 @@ function ablecore_forms($form_id, $args)
 	return $result;
 }
 
+function ablecore_init()
+{
+
+}
+
+function ablecore_module_implements_alter(&$implementations, $hook)
+{
+	// If an Able Core module implements the hook...
+}
+
 /**
  * Add default themes for all block implementations.
  *
