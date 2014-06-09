@@ -111,6 +111,31 @@ class ThemeManager
 	}
 
 	/**
+	 * Define Function
+	 *
+	 * Defines a function to be used as a theme. Basically the same as define, just without
+	 * the template auto-processing (which you won't need if you're using a function).
+	 *
+	 * @param string $key                      The name of the theme.
+	 * @param string $render_element           The render element (whatever element is passed to the theme. Most likely
+	 *                                         this will be 'element').
+	 * @param string $file                     The filename the function lies in (relative to the module root).
+	 * @param array  $additional_configuration Any additional configuration to pass.
+	 *
+	 * @return $this
+	 */
+	public function defineFunction($key, $render_element, $file, $additional_configuration = array())
+	{
+		$this->generated[$key] = array(
+			'render element' => $render_element,
+			'file' => $file,
+		);
+		$this->generated[$key] = array_replace_recursive($this->generated[$key], $additional_configuration);
+
+		return $this;
+	}
+
+	/**
 	 * Finish
 	 *
 	 * Finishes generation of the ThemeManager and returns the configuration
