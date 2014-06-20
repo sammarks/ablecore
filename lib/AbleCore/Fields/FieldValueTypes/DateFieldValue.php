@@ -49,7 +49,7 @@ class DateFieldValue extends FieldValue
 
 	public function __toString()
 	{
-		return format_date($this->timestamp);
+		return (string)format_date($this->timestamp);
 	}
 
 	public function format($format)
@@ -59,6 +59,6 @@ class DateFieldValue extends FieldValue
 
 	public function drupalFormat($type = 'medium', $format = '', $timezone = NULL, $langcode = NULL)
 	{
-		return format_date($this->timestamp, $type, $format, $timezone, $langcode);
+		return (string)format_date($this->timestamp, $type, $format, $timezone, $langcode);
 	}
 }

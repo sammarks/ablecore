@@ -7,12 +7,12 @@ use AbleCore\Fields\FieldValueTypes\DateFieldValue;
 class Date extends FieldValueHandler
 {
 	public static $configuration = array(
-		'datetime' => 'date',
-		'date' => 'date',
-		'datestamp' => 'date',
+		'datetime' => 'dateField',
+		'date' => 'dateField',
+		'datestamp' => 'dateField',
 	);
 
-	public static function date($type, $value, $name)
+	public static function dateField($type, $value, $name)
 	{
 		if (!self::checkFieldValue($value, 'value'))
 			return null;

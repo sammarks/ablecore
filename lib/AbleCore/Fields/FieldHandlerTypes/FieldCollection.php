@@ -8,10 +8,10 @@ use AbleCore\Fields\FieldValueTypes\FieldCollectionFieldValue;
 class FieldCollection extends FieldValueHandler
 {
 	public static $configuration = array(
-		'field_collection' => 'fieldCollection',
+		'field_collection' => 'collection',
 	);
 
-	public static function fieldCollection($type, $value)
+	public static function collection($type, $value)
 	{
 		if (!self::checkFieldValue($value, 'value'))
 			return null;
