@@ -335,7 +335,13 @@ class Menu
 
 		// Now we check the children.
 		if (array_key_exists('#below', $active_output)) {
+
+			// Add a class to the current item indicating that it has children.
+			$active_output['#attributes']['class'][] = 'has-children';
+
+			// Now, actually process the children.
 			$this->addActiveTrailClasses($active_output['#below'], $active_trail);
+
 		}
 	}
 
