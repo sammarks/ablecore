@@ -208,6 +208,11 @@ class Menu
 		// Prepare the active link classes.
 		$output_no_parent = menu_tree_output($menu_tree_no_parent);
 		$this->addActiveTrailClasses($output_no_parent);
+
+		// Prepare the children classes.
+		$this->addChildrenClasses($output_no_parent);
+
+		// Merge the results.
 		$output = array_replace_recursive($output, $output_no_parent);
 
 		// Now add the themes to the output.
@@ -291,6 +296,16 @@ class Menu
 		}
 	}
 
+	protected function addChildrenClasses(array &$output)
+	{
+		foreach ($output as $key => $link) {
+			if (!empty($link['#below'])) {
+				$output[$key]['#attributes']['class'][] = 'has-children';
+				$this->addChildrenClasses($output[$key]['#below']);
+			}
+		}
+	}
+
 	protected function addActiveTrailClasses(array &$output, array $active_trail = array())
 	{
 		// Are we dealing with a link that goes to the front page?
@@ -335,13 +350,7 @@ class Menu
 
 		// Now we check the children.
 		if (array_key_exists('#below', $active_output)) {
-
-			// Add a class to the current item indicating that it has children.
-			$active_output['#attributes']['class'][] = 'has-children';
-
-			// Now, actually process the children.
 			$this->addActiveTrailClasses($active_output['#below'], $active_trail);
-
 		}
 	}
 
