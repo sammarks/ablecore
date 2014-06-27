@@ -113,7 +113,7 @@ class PathManager
 			}
 		}
 
-		array_push($arguments, $extra_arguments);
+		$arguments = array_merge($arguments, $extra_arguments);
 
 		// Generate a list of access arguments.
 		if (is_array($this->access_arguments) && count($this->access_arguments) > 0) {
