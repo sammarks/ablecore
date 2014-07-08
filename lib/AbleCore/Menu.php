@@ -200,23 +200,23 @@ class Menu
 		}
 
 		$menu_tree_no_parent = $this->buildTree($this->menu['menu_name'], $menu_tree_options);
-		$menu_tree += $menu_tree_no_parent;
 
 		// Now prepare the output.
 		$output = menu_tree_output($menu_tree);
-
-		// Prepare the active link classes.
 		$output_no_parent = menu_tree_output($menu_tree_no_parent);
-		$this->addActiveTrailClasses($output_no_parent);
 
-		// Prepare the children classes.
+		// Call the various post-processors individually.
+		$this->addActiveTrailClasses($output_no_parent);
 		$this->addChildrenClasses($output_no_parent);
+		$this->addLinkThemes($output_no_parent);
+
+		// Now for the parent.
+		$this->addActiveTrailClasses($output);
+		$this->addChildrenClasses($output);
+		$this->addLinkThemes($output);
 
 		// Merge the results.
-		$output = array_replace_recursive($output, $output_no_parent);
-
-		// Now add the themes to the output.
-		$this->addLinkThemes($output);
+		$output += $output_no_parent;
 
 		// Continue preparing the output.
 		$output['#theme_wrappers'] = array('ablecore_menu_tree');
