@@ -349,7 +349,7 @@ class Menu
 			$active_output['#attributes']['class'][] = 'active-trail';
 
 		// Now we check the children.
-		if (array_key_exists('#below', $active_output)) {
+		if (!empty($active_output['#below']) && is_array($active_output['#below'])) {
 			$this->addActiveTrailClasses($active_output['#below'], $active_trail);
 		}
 	}
