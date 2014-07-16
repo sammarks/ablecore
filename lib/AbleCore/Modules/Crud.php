@@ -16,20 +16,12 @@ abstract class Crud implements CrudInterface {
 	protected static function getPrimaryKeyInternal()
 	{
 		$class = get_called_class();
-		if (!$class instanceof Crud) {
-			throw new \Exception('The called class is not an instance of Crud. Something interesting has happened.');
-		}
-
 		return $class::getPrimaryKey();
 	}
 
 	protected static function getTableNameInternal()
 	{
 		$class = get_called_class();
-		if (!$class instanceof Crud) {
-			throw new \Exception('The called class is not an instance of Crud. Something interesting has happened.');
-		}
-
 		return $class::getTableName();
 	}
 
