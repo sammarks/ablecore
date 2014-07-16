@@ -6,16 +6,30 @@ abstract class Crud implements CrudInterface {
 
 	protected static function getPrimaryKey()
 	{
-		$class = get_called_class();
-		$schema = drupal_get_schema($class::getTableName());
+		$schema = drupal_get_schema(self::getTableNameInternal());
 		if (!empty($schema['primary key'][0]))
 			return $schema['primary key'][0];
+
 		return false;
+	}
+
+	protected static function getPrimaryKeyInternal()
+	{
+		$class = get_called_class();
+		if (!$class instanceof Crud) {
+			throw new \Exception('The called class is not an instance of Crud. Something interesting has happened.');
+		}
+
+		return $class::getPrimaryKey();
 	}
 
 	protected static function getTableNameInternal()
 	{
 		$class = get_called_class();
+		if (!$class instanceof Crud) {
+			throw new \Exception('The called class is not an instance of Crud. Something interesting has happened.');
+		}
+
 		return $class::getTableName();
 	}
 
@@ -63,7 +77,7 @@ abstract class Crud implements CrudInterface {
 		$cache = &drupal_static(__FUNCTION__, array(), $reset);
 		if (!isset($cache[self::getTableNameInternal()][$identifier])) {
 			$table = self::getTableNameInternal();
-			$primary_key = self::getPrimaryKey();
+			$primary_key = self::getPrimaryKeyInternal();
 			$result = db_select($table, 't')
 				->fields('t')
 				->condition($primary_key, $identifier)
