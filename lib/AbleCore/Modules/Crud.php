@@ -63,6 +63,7 @@ abstract class Crud implements CrudInterface {
 	 * @param bool $reset      Whether or not to reset the static cache.
 	 *
 	 * @return bool|Crud false if the instance wasn't found. Else, the object.
+	 * @throws \Exception
 	 */
 	public static function load($identifier, $reset = false)
 	{
@@ -70,6 +71,9 @@ abstract class Crud implements CrudInterface {
 		if (!isset($cache[self::getTableNameInternal()][$identifier])) {
 			$table = self::getTableNameInternal();
 			$primary_key = self::getPrimaryKeyInternal();
+			if (!$primary_key) {
+				throw new \Exception('A primary key could not be found for ' . $table);
+			}
 			$result = db_select($table, 't')
 				->fields('t')
 				->condition($primary_key, $identifier)
