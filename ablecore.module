@@ -2,6 +2,7 @@
 
 use AbleCore\Modules\PathManager;
 use AbleCore\Internal\HookUtils;
+use Drupal\xautoload\FinderOperation\HookXautoloadOperation;
 
 // Require preprocessors that aren't handled by Able Core.
 require_once('preprocessors/node.inc');
@@ -58,6 +59,24 @@ function ablecore_init()
 	foreach ($ablecore_modules as $module) {
 		HookUtils::includeDirectory($module, 'helpers');
 		HookUtils::includeDirectory($module, 'hooks');
+	}
+}
+
+/**
+ * Implements hook_modules_installed()
+ */
+function ablecore_modules_installed(array $modules)
+{
+	// Trigger invocation of hook_xautoload() to catch any hooks.
+	$operation = new HookXautoloadOperation();
+	xautoload()->proxyFinder->onFinderInit($operation);
+
+	$ablecore_modules = HookUtils::getAbleCoreModules();
+	foreach ($modules as $module) {
+		if (array_search($module, $ablecore_modules) !== false) {
+			HookUtils::includeDirectory($module, 'helpers');
+			HookUtils::includeDirectory($module, 'hooks');
+		}
 	}
 }
 
