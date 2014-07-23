@@ -221,7 +221,12 @@ class Menu
 		// Continue preparing the output.
 		$output['#theme_wrappers'] = array('ablecore_menu_tree');
 		if ($this->menu_theme) {
-			$output['#theme_wrappers'][] = $this->menu_theme;
+			// Override the able core theme wrapper instead of appending to it.
+			if (!is_array($this->menu_theme)) {
+				$output['#theme_wrappers'] = array($this->menu_theme);
+			} else {
+				$output['#theme_wrappers'] = $this->menu_theme;
+			}
 		}
 
 		$attributes = array();
