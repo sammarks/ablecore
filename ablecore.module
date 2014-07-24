@@ -58,6 +58,21 @@ function ablecore_forms($form_id, $args)
 
 function ablecore_init()
 {
+	ablecore_custom_theme();
+}
+
+/**
+ * Implements hook_custom_theme()
+ */
+function ablecore_custom_theme()
+{
+	// Make sure this only runs once (taken from xautoload).
+	static $first_run = true;
+	if (!$first_run) {
+		return;
+	}
+	$first_run = false;
+
 	$ablecore_modules = HookUtils::getAbleCoreModules();
 	foreach ($ablecore_modules as $module) {
 		HookUtils::includeDirectory($module, 'helpers');
