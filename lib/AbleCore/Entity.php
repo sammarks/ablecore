@@ -75,6 +75,28 @@ class Entity extends DrupalExtension {
 	}
 
 	/**
+	 * Current
+	 *
+	 * Gets the entity representing the current page.
+	 *
+	 * @param string $entity_type The entity type to load. Defaults to 'node'.
+	 * @param int    $position    The position in the path where the ID for the entity lies.
+	 *                            For example, for 'node/1', this value would be '1'.
+	 *                            Defaults to 1.
+	 *
+	 * @return Entity|bool The loaded entity or false on error.
+	 */
+	public static function current($entity_type = 'node', $position = 1)
+	{
+		$item = menu_get_object($entity_type, $position);
+		if ($item) {
+			return new self($entity_type, $item);
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Import
 	 *
 	 * Finds the ID of the entity and the type of it, and returns a new Entity object.
