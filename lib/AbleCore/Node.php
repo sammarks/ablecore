@@ -85,16 +85,4 @@ class Node extends Entity {
 		return render($view);
 	}
 
-	/**
-	 * Alias
-	 *
-	 * Gets the path alias for the loaded node.
-	 *
-	 * @return bool|mixed|null The path alias.
-	 */
-	public function alias()
-	{
-		return $this->path();
-	}
-
 }

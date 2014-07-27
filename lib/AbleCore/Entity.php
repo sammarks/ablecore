@@ -395,6 +395,18 @@ class Entity extends DrupalExtension {
 	}
 
 	/**
+	 * Alias
+	 *
+	 * Gets the path alias for the loaded entity (backwards compatibility).
+	 *
+	 * @return bool|mixed|null The path alias.
+	 */
+	public function alias()
+	{
+		return $this->path();
+	}
+
+	/**
 	 * Save
 	 *
 	 * Saves the entity.
