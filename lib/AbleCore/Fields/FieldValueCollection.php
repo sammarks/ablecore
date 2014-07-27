@@ -8,10 +8,13 @@ class FieldValueCollection extends \ArrayObject
 	{
 		// If there is one item in the array, pass this
 		// information along.
-		if (count($this) == 1 && !property_exists($item, $this)) {
-			return $this[0]->$item;
-		} else {
+		if (count($this) > 0 && !property_exists($item, $this)) {
+			// We don't do a check for the property existing here because __call might handle it.
+			return reset($this)->$item;
+		} elseif (property_exists($item, $this)) {
 			return $this->$item;
+		} else {
+			throw new \Exception('The property ' . $item . ' could not be found.');
 		}
 	}
 
@@ -19,10 +22,16 @@ class FieldValueCollection extends \ArrayObject
 	{
 		// If there is one item in the array, pass this
 		// information along.
-		if (count($this) == 1 && !method_exists($item, $this)) {
-			return call_user_func_array(array($this[0], $item), $arguments);
-		} else {
+		if (count($this) > 0 && !method_exists($item, $this)) {
+			if (is_callable(array(reset($this), $item))) {
+				return call_user_func_array(array(reset($this), $item), $arguments);
+			} else {
+				throw new \Exception('The method ' . $item . ' could not be found.');
+			}
+		} elseif (method_exists($item, $this)) {
 			return call_user_func_array(array($this, $item), $arguments);
+		} else {
+			throw new \Exception('The method ' . $item . ' could not be found.');
 		}
 	}
 
