@@ -6,68 +6,8 @@
  */
 
 namespace AbleCore;
-use AbleCore\Fields\FieldValueRegistry;
 
-/**
- * Node
- *
- * Helper class for managing Drupal nodes.
- *
- * See [the documentation](/docs/php-libraries/loading-nodes) for more information.
- *
- * @package Able Core
- * @author  Samuel Marks <sam@sammarks.me>
- */
-class Node extends DrupalExtension
-{
-	public function __construct($base)
-	{
-		$this->base = $base;
-	}
-
-	/**
-	 * Import
-	 *
-	 * Creates a new instance of the Node class with an already-loaded node.
-	 *
-	 * @param object $existing_node The existing node.
-	 *
-	 * @return Node
-	 */
-	public static function import($existing_node)
-	{
-		return new self($existing_node);
-	}
-
-	public function __get($name)
-	{
-		$result = $this->field($name);
-		if ($result === false) {
-			return parent::__get($name);
-		} else {
-			return $result;
-		}
-	}
-
-	/**
-	 * Field
-	 *
-	 * Gets the value of the named field. Returns false in failure.
-	 *
-	 * @param string $name The name of the field to retrieve.
-	 *
-	 * @return mixed
-	 */
-	public function field($name)
-	{
-		$args = func_get_args();
-		array_shift($args);
-		$func_args = array('node', $this->base, $name);
-		foreach ($args as $arg)
-			$func_args[] = $arg;
-
-		return forward_static_call_array(array('\AbleCore\Fields\FieldValueRegistry', 'field'), $func_args);
-	}
+class Node extends Entity {
 
 	/**
 	 * Load
@@ -78,21 +18,22 @@ class Node extends DrupalExtension
 	 *                            it is sent through node_load as a NID. If it is a
 	 *                            string, it is sent through defaultcontent to try and
 	 *                            grab a node with a matching machine name.
+	 * @param int    $unused      [unused]
 	 *
 	 * @return Node
 	 */
-	public static function load($identifier)
+	public static function load($identifier, $unused = null)
 	{
-		$base = null;
+		$result = null;
 		if (is_numeric($identifier)) {
-			$base = \node_load($identifier);
+			$result = parent::load('node', $identifier);
 		} else {
 			// Try getting the UUID first, then the machine name.
-			if (function_exists('entity_uuid_load')) {
-				$n = entity_uuid_load('node', array($identifier));
-				$base = array_pop($n);
-			} elseif (function_exists('defaultcontent_get_node')) {
-				$base = \defaultcontent_get_node($identifier);
+			if (module_exists('uuid')) {
+				$result = parent::loadByUUID('node', $identifier);
+			} elseif (module_exists('defaultcontent') && function_exists('defaultcontent_get_default')) {
+				$nid = defaultcontent_get_default($identifier);
+				$result = parent::load('node', $nid);
 			} else {
 				trigger_error("When loading the node: '{$identifier}', a non-number was given, " .
 					"but only a number is supported.",
@@ -100,28 +41,12 @@ class Node extends DrupalExtension
 			}
 		}
 
-		if (!$base) {
+		if (!$result) {
 			trigger_error("The node: '{$identifier}' does not exist.", E_USER_WARNING);
+			return false;
 		} else {
-			return new self($base);
+			return $result;
 		}
-
-		return false;
-	}
-
-	/**
-	 * Render
-	 *
-	 * Renders the current node.
-	 *
-	 * @param  string $display The display to use. Defaults to 'full'
-	 *
-	 * @return string           The HTML content for the node.
-	 */
-	public function render($display = 'full')
-	{
-		$view = node_view($this->base, $display); // Get around pass by reference warning.
-		return render($view);
 	}
 
 	/**
@@ -144,6 +69,23 @@ class Node extends DrupalExtension
 	}
 
 	/**
+	 * Render
+	 *
+	 * Renders the current node.
+	 *
+	 * @param  string $display The display to use. Defaults to 'full'
+	 *
+	 * @return string           The HTML content for the node.
+	 */
+	public function render($display = 'full')
+	{
+		// If we're going to render the node, we need to render the full node.
+		$this->base = node_load($this->id());
+		$view = node_view($this->base, $display);
+		return render($view);
+	}
+
+	/**
 	 * Alias
 	 *
 	 * Gets the path alias for the loaded node.
@@ -152,7 +94,7 @@ class Node extends DrupalExtension
 	 */
 	public function alias()
 	{
-		return drupal_get_path_alias('node/' . $this->nid);
+		return $this->path();
 	}
 
 }

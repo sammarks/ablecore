@@ -38,6 +38,7 @@ class FieldValueRegistry
 	 * Gets the value for a field on the specified entity.
 	 *
 	 * @param string $entity_type The type of entity being loaded.
+	 * @param int    $entity_id   The ID of the entity to get the field from.
 	 * @param object $entity      The entity loaded from Drupal.
 	 * @param string $name        The name of the field.
 	 *
@@ -45,7 +46,7 @@ class FieldValueRegistry
 	 *                                        null if the field has no values,
 	 *                                        FieldValueCollection otherwise.
 	 */
-	public static function field($entity_type, $entity, $name)
+	public static function field($entity_type, $entity_id, $entity, $name)
 	{
 		// Check to see if it's a valid field type.
 		$field_info = field_info_field($name);
@@ -59,7 +60,10 @@ class FieldValueRegistry
 			return false;
 
 		// Make sure the field exists on the base.
-		if (!property_exists($entity, $name)) return false;
+		if (!property_exists($entity, $name)) {
+			field_attach_load_revision($entity_type, array($entity_id => $entity), array('field_id' => $field_info['id']));
+			if (!property_exists($entity, $name)) return false;
+		}
 
 		// Get the items for the field.
 		$items = field_get_items($entity_type, $entity, $name);
