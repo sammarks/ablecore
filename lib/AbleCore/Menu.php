@@ -209,6 +209,7 @@ class Menu
 		$this->addActiveTrailClasses($output_no_parent);
 		$this->addChildrenClasses($output_no_parent);
 		$this->addLinkThemes($output_no_parent);
+		$this->addDepthClasses($output_no_parent);
 
 		// Now for the parent.
 		$this->addActiveTrailClasses($output);
@@ -307,6 +308,27 @@ class Menu
 			if (!empty($link['#below'])) {
 				$output[$key]['#attributes']['class'][] = 'has-children';
 				$this->addChildrenClasses($output[$key]['#below']);
+			}
+		}
+	}
+
+	/**
+	 * Add Depth Classes
+	 *
+	 * Adds classes and attributes to help themers identify the depth of individual
+	 * menu links.
+	 *
+	 * @param array $output The current output array.
+	 * @param int   $depth  The current depth (internal use only).
+	 */
+	protected function addDepthClasses(array &$output, $depth = 1)
+	{
+		foreach ($output as $key => $link) {
+			if (!element_child($key)) continue;
+			$output[$key]['#attributes']['class'][] = 'depth-' . $depth;
+			$output[$key]['#depth'] = $depth;
+			if (!empty($link['#below'])) {
+				$this->addDepthClasses($output[$key]['#below'], $depth + 1);
 			}
 		}
 	}

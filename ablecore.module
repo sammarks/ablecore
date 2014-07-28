@@ -30,6 +30,7 @@ function ablecore_theme()
 	$themes = array();
 	$themes = array_merge($themes, ablecore_menu_hooks_theme());
 	$themes = array_merge($themes, ablecore_mail_theme());
+	$themes = array_merge($themes, ablecore_helper_themes_theme());
 	return $themes;
 }
 
