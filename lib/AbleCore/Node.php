@@ -10,7 +10,7 @@ namespace AbleCore;
 class Node extends Entity {
 
 	/**
-	 * Load
+	 * Load by Identifier
 	 *
 	 * Loads an existing node with the specified identifier.
 	 *
@@ -18,11 +18,10 @@ class Node extends Entity {
 	 *                            it is sent through node_load as a NID. If it is a
 	 *                            string, it is sent through defaultcontent to try and
 	 *                            grab a node with a matching machine name.
-	 * @param int    $unused      [unused]
 	 *
 	 * @return Node
 	 */
-	public static function load($identifier, $unused = null)
+	public static function loadIdentifier($identifier)
 	{
 		$result = null;
 		if (is_numeric($identifier)) {
@@ -65,7 +64,7 @@ class Node extends Entity {
 	 */
 	public static function get($identifier, $display = 'full')
 	{
-		return self::load($identifier)->render($display);
+		return self::loadIdentifier($identifier)->render($display);
 	}
 
 	/**
