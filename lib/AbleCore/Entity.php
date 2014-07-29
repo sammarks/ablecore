@@ -129,6 +129,44 @@ class Entity extends DrupalExtension {
 	}
 
 	/**
+	 * Map
+	 *
+	 * Given an entity type and an array of entity IDs, returns an array
+	 * of those loaded entities.
+	 *
+	 * @param string $entity_type The type of entity to load.
+	 * @param array $entity_ids An ID of entity IDs to load.
+	 *
+	 * @return array The loaded entities.
+	 */
+	public static function map($entity_type, array $entity_ids = array())
+	{
+		$entities = array();
+		foreach ($entity_ids as $id) {
+			$entities[] = self::load($entity_type, $id);
+		}
+
+		return $entities;
+	}
+
+	/**
+	 * Map Query
+	 *
+	 * Given a select query, executes the query and returns an array of Entity
+	 * objects representing the result.
+	 *
+	 * @param string       $entity_type The type of entity the results represent.
+	 * @param \SelectQuery $query       The query.
+	 * @param int          $index       Passed to fetchCol(), represents the column to fetch.
+	 *
+	 * @return array An array of Entity objects.
+	 */
+	public static function mapQuery($entity_type, \SelectQuery $query, $index = 0)
+	{
+		return self::map($entity_type, $query->execute()->fetchCol($index));
+	}
+
+	/**
 	 * Get Latest Revision ID
 	 *
 	 * Gets the latest revision ID for the specified entity from the database.
