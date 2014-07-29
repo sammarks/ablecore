@@ -26,9 +26,11 @@ function theme_columns($variables)
 			'#attributes' => array('class' => array('column', 'column-' . $i)),
 			'#value' => '',
 		);
-		for ($k = 0; $k < $per_column; $k++) {
-			if ($i * $per_column + $k > count($children)) break;
-			$column['#value'] .= render($children[$i * $per_column + $k]);
+		if (count($children) >= $i + 1) {
+			for ($k = 0; $k < $per_column; $k++) {
+				if ($i * $per_column + $k > count($children)) break;
+				$column['#value'] .= render($children[$i * $per_column + $k]);
+			}
 		}
 		$rendered_columns[] = $column;
 	}
