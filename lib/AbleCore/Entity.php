@@ -155,13 +155,13 @@ class Entity extends DrupalExtension {
 	 * Given a select query, executes the query and returns an array of Entity
 	 * objects representing the result.
 	 *
-	 * @param string       $entity_type The type of entity the results represent.
-	 * @param \SelectQuery $query       The query.
-	 * @param int          $index       Passed to fetchCol(), represents the column to fetch.
+	 * @param string                $entity_type The type of entity the results represent.
+	 * @param \SelectQueryInterface $query       The query.
+	 * @param int                   $index       Passed to fetchCol(), represents the column to fetch.
 	 *
 	 * @return array An array of Entity objects.
 	 */
-	public static function mapQuery($entity_type, \SelectQuery $query, $index = 0)
+	public static function mapQuery($entity_type, \SelectQueryInterface $query, $index = 0)
 	{
 		return static::map($entity_type, $query->execute()->fetchCol($index));
 	}
