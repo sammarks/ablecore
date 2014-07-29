@@ -49,7 +49,7 @@ class Entity extends DrupalExtension {
 		$result = $query->execute()->fetch();
 
 		if ($result) {
-			return new self($entity_type, $result);
+			return new static($entity_type, $result);
 		} else {
 			return false;
 		}
@@ -68,7 +68,7 @@ class Entity extends DrupalExtension {
 		if (!module_exists('uuid')) return false;
 		$entities = entity_get_id_by_uuid($entity_type, array($entity_uuid));
 		foreach ($entities as $entity_id) {
-			return self::load($entity_type, $entity_id);
+			return static::load($entity_type, $entity_id);
 		}
 
 		return false;
@@ -90,7 +90,7 @@ class Entity extends DrupalExtension {
 	{
 		$item = menu_get_object($entity_type, $position);
 		if ($item) {
-			return new self($entity_type, $item);
+			return new static($entity_type, $item);
 		} else {
 			return false;
 		}
@@ -111,7 +111,7 @@ class Entity extends DrupalExtension {
 		foreach ($entity_types as $entity_type => $config) {
 			if (array_key_exists('entity keys', $config) && array_key_exists('id', $config['entity keys'])) {
 				if (isset($existing_entity->{$config['entity keys']['id']})) {
-					$loaded_entity = self::load($entity_type, $existing_entity->{$config['entity keys']['id']});
+					$loaded_entity = static::load($entity_type, $existing_entity->{$config['entity keys']['id']});
 					if (!$loaded_entity) continue;
 					if (module_exists('uuid')) {
 						$uuid_a = $existing_entity->{$config['entity keys']['uuid']};
@@ -143,7 +143,7 @@ class Entity extends DrupalExtension {
 	{
 		$entities = array();
 		foreach ($entity_ids as $id) {
-			$entities[] = self::load($entity_type, $id);
+			$entities[] = static::load($entity_type, $id);
 		}
 
 		return $entities;
@@ -163,7 +163,7 @@ class Entity extends DrupalExtension {
 	 */
 	public static function mapQuery($entity_type, \SelectQuery $query, $index = 0)
 	{
-		return self::map($entity_type, $query->execute()->fetchCol($index));
+		return static::map($entity_type, $query->execute()->fetchCol($index));
 	}
 
 	/**
