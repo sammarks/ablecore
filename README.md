@@ -178,7 +178,7 @@ Drupal's configuration syntax for things like `hook_menu` and `hook_theme`. It c
 nasty PHP arrays. The code was not readable (especially if many declarations were made in the
 same file), and the module file went on for miles.
 
-Because of htat, several helpers classes were introduced to collapse the basic configuration for
+Because of that, several helpers classes were introduced to collapse the basic configuration for
 these files into one-liners. Creating a custom menu entry for `hook_menu` is as simple as
 the following:
 
