@@ -29,7 +29,7 @@ class TaxonomyTerm extends EntityExtension {
 		$query->addJoin('inner', 'taxonomy_vocabulary', 'tv', 'tv.vid = td.vid');
 		$query->condition('tv.machine_name', $vocabulary_machine_name);
 		$query->addField('td', 'tid');
-		$query->orderBy('weight');
+		$query->orderBy('td.weight');
 		return static::mapQuery($query);
 	}
 
