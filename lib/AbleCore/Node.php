@@ -7,10 +7,20 @@
 
 namespace AbleCore;
 
-class Node extends Entity {
+class Node extends EntityExtension {
 
 	/**
-	 * Load by Identifier
+	 * Gets the entity type of the current class.
+	 *
+	 * @return string The entity type.
+	 */
+	static function getEntityType()
+	{
+		return 'node';
+	}
+
+	/**
+	 * Load
 	 *
 	 * Loads an existing node with the specified identifier.
 	 *
@@ -21,18 +31,18 @@ class Node extends Entity {
 	 *
 	 * @return Node
 	 */
-	public static function loadIdentifier($identifier)
+	public static function load($identifier)
 	{
 		$result = null;
 		if (is_numeric($identifier)) {
-			$result = parent::load('node', $identifier);
+			$result = parent::load($identifier);
 		} else {
 			// Try getting the UUID first, then the machine name.
 			if (module_exists('uuid')) {
-				$result = parent::loadByUUID('node', $identifier);
+				$result = static::loadByUUID($identifier);
 			} elseif (module_exists('defaultcontent') && function_exists('defaultcontent_get_default')) {
 				$nid = defaultcontent_get_default($identifier);
-				$result = parent::load('node', $nid);
+				$result = static::load('node', $nid);
 			} else {
 				trigger_error("When loading the node: '{$identifier}', a non-number was given, " .
 					"but only a number is supported.",
@@ -64,7 +74,7 @@ class Node extends Entity {
 	 */
 	public static function get($identifier, $display = 'full')
 	{
-		return self::loadIdentifier($identifier)->render($display);
+		return static::load($identifier)->render($display);
 	}
 
 	/**

@@ -25,7 +25,7 @@ class Entity extends DrupalExtension {
 	}
 
 	/**
-	 * Load
+	 * Load (with type)
 	 *
 	 * Loads basic entity information from the database.
 	 *
@@ -35,7 +35,7 @@ class Entity extends DrupalExtension {
 	 * @return Entity|bool The loaded entity on success, or false on failure.
 	 * @throws \Exception
 	 */
-	public static function load($entity_type, $entity_id)
+	public static function loadWithType($entity_type, $entity_id)
 	{
 		$info = entity_get_info($entity_type);
 		if (!$info || empty($info['base table'])) {
@@ -56,26 +56,26 @@ class Entity extends DrupalExtension {
 	}
 
 	/**
-	 * Load by UUID
+	 * Load by UUID (with type)
 	 *
 	 * @param string $entity_type The type of entity to load.
 	 * @param string $entity_uuid The UUID of the entity to load.
 	 *
 	 * @return Entity|bool The loaded entity on success, else false.
 	 */
-	public static function loadByUUID($entity_type, $entity_uuid)
+	public static function loadWithTypeByUUID($entity_type, $entity_uuid)
 	{
 		if (!module_exists('uuid')) return false;
 		$entities = entity_get_id_by_uuid($entity_type, array($entity_uuid));
 		foreach ($entities as $entity_id) {
-			return static::load($entity_type, $entity_id);
+			return static::loadWithType($entity_type, $entity_id);
 		}
 
 		return false;
 	}
 
 	/**
-	 * Current
+	 * Current (with type)
 	 *
 	 * Gets the entity representing the current page.
 	 *
@@ -86,7 +86,7 @@ class Entity extends DrupalExtension {
 	 *
 	 * @return Entity|bool The loaded entity or false on error.
 	 */
-	public static function current($entity_type = 'node', $position = 1)
+	public static function currentWithType($entity_type = 'node', $position = 1)
 	{
 		$item = menu_get_object($entity_type, $position);
 		if ($item) {
@@ -111,7 +111,7 @@ class Entity extends DrupalExtension {
 		foreach ($entity_types as $entity_type => $config) {
 			if (array_key_exists('entity keys', $config) && array_key_exists('id', $config['entity keys'])) {
 				if (isset($existing_entity->{$config['entity keys']['id']})) {
-					$loaded_entity = static::load($entity_type, $existing_entity->{$config['entity keys']['id']});
+					$loaded_entity = static::loadWithType($entity_type, $existing_entity->{$config['entity keys']['id']});
 					if (!$loaded_entity) continue;
 					if (module_exists('uuid')) {
 						$uuid_a = $existing_entity->{$config['entity keys']['uuid']};
@@ -129,7 +129,7 @@ class Entity extends DrupalExtension {
 	}
 
 	/**
-	 * Map
+	 * Map (with type)
 	 *
 	 * Given an entity type and an array of entity IDs, returns an array
 	 * of those loaded entities.
@@ -139,18 +139,18 @@ class Entity extends DrupalExtension {
 	 *
 	 * @return array The loaded entities.
 	 */
-	public static function map($entity_type, array $entity_ids = array())
+	public static function mapWithType($entity_type, array $entity_ids = array())
 	{
 		$entities = array();
 		foreach ($entity_ids as $id) {
-			$entities[] = static::load($entity_type, $id);
+			$entities[] = static::loadWithType($entity_type, $id);
 		}
 
 		return $entities;
 	}
 
 	/**
-	 * Map Query
+	 * Map Query (with type)
 	 *
 	 * Given a select query, executes the query and returns an array of Entity
 	 * objects representing the result.
@@ -161,13 +161,13 @@ class Entity extends DrupalExtension {
 	 *
 	 * @return array An array of Entity objects.
 	 */
-	public static function mapQuery($entity_type, \SelectQueryInterface $query, $index = 0)
+	public static function mapQueryWithType($entity_type, \SelectQueryInterface $query, $index = 0)
 	{
-		return static::map($entity_type, $query->execute()->fetchCol($index));
+		return static::mapWithType($entity_type, $query->execute()->fetchCol($index));
 	}
 
 	/**
-	 * Get Latest Revision ID
+	 * Get Latest Revision ID (with type)
 	 *
 	 * Gets the latest revision ID for the specified entity from the database.
 	 *
@@ -177,7 +177,7 @@ class Entity extends DrupalExtension {
 	 *
 	 * @return int|bool The revision ID on success, false on error.
 	 */
-	public static function getLatestRevisionID($entity_type, $entity_id, $reset = false)
+	public static function getLatestRevisionIDWithType($entity_type, $entity_id, $reset = false)
 	{
 		$ids = &drupal_static(__FUNCTION__, null, $reset);
 		if (!isset($ids[$entity_type][$entity_id])) {
@@ -224,7 +224,7 @@ class Entity extends DrupalExtension {
 	}
 
 	/**
-	 * Delete
+	 * Delete (with type)
 	 *
 	 * Deletes an entity.
 	 *
@@ -234,7 +234,7 @@ class Entity extends DrupalExtension {
 	 * @return bool The results of entity_delete()
 	 * @see entity_delete()
 	 */
-	public static function delete($entity_type, $entity_id)
+	public static function deleteWithType($entity_type, $entity_id)
 	{
 		return entity_delete($entity_type, $entity_id);
 	}
@@ -490,7 +490,7 @@ class Entity extends DrupalExtension {
 	 */
 	public function deleteCurrent()
 	{
-		return self::delete($this->type, $this->id());
+		return self::deleteWithType($this->type, $this->id());
 	}
 
 	/**

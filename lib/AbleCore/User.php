@@ -9,47 +9,17 @@
 
 namespace AbleCore;
 
-/**
- * User
- *
- * A user wrapper for Drupal applications.
- *
- * See [the documentation](/docs/php-libraries/user-helpers) for more information.
- *
- * @package Able Core
- * @author  Samuel Marks <sam@sammarks.me>
- */
-class User extends DrupalExtension
+class User extends EntityExtension
 {
 
 	/**
-	 * Construct
+	 * Gets the entity type of the current class.
 	 *
-	 * Creates a new User object.
-	 *
-	 * @param integer $uid The UID for the user.
+	 * @return string The entity type.
 	 */
-	public function __construct($uid)
+	static function getEntityType()
 	{
-		$user = user_load($uid);
-		if (!$user) {
-			throw new \Exception("The user ($uid) doesn't exist!");
-		}
-		$this->base = $user;
-	}
-
-	/**
-	 * Load
-	 *
-	 * Loads the user with the given UID.
-	 *
-	 * @param  integer $uid The user ID.
-	 *
-	 * @return User         The AbleCore\User object.
-	 */
-	public static function load($uid)
-	{
-		return new User($uid);
+		return 'user';
 	}
 
 	/**
@@ -57,7 +27,7 @@ class User extends DrupalExtension
 	 *
 	 * Loads the current user.
 	 *
-	 * @return User The AbleCore\User object.
+	 * @return User The current user.
 	 */
 	public static function current()
 	{
@@ -66,7 +36,7 @@ class User extends DrupalExtension
 		if (self::check() === false) {
 			return false;
 		} else {
-			return new User($user->uid);
+			return static::import($user);
 		}
 	}
 
@@ -94,15 +64,9 @@ class User extends DrupalExtension
 	 */
 	public function admin()
 	{
-		try {
-			if (array_search('administrator', $this->roles) !== false) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (\Exception $ex) {
-			return false;
-		}
+		if (!empty($this->base->roles) && is_array($this->base->roles)) {
+			return array_search('administrator', $this->base->roles) !== false;
+		} else return false;
 	}
 
 	/**
@@ -118,7 +82,6 @@ class User extends DrupalExtension
 	 */
 	public function role($role)
 	{
-		// We were trying to reinvent the wheel before...
 		return user_access($role, $this->base);
 	}
 
