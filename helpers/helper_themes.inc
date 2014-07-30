@@ -14,7 +14,7 @@ function theme_columns($variables)
 	$num_columns = $variables['num_columns'];
 	$children = $variables['items'];
 
-	$per_column = count($children) / $num_columns;
+	$per_column = ceil(count($children) / $num_columns);
 	$rendered_columns = array(
 		'#type' => 'container',
 		'#attributes' => array('class' => array('column-container')),
