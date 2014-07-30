@@ -77,6 +77,7 @@ class FieldValueRegistry
 		array_shift($args);
 		array_shift($args);
 		array_shift($args);
+		array_shift($args);
 
 		// Create a new FieldValueCollection with the parsed values.
 		$valueCollection = new FieldValueCollection();
