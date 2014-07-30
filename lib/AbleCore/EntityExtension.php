@@ -15,8 +15,8 @@ abstract class EntityExtension extends Entity implements EntityExtensionInterfac
 	protected static function getCurrentEntityType()
 	{
 		$current_class = get_called_class();
-		if ($current_class instanceof self) {
-			return $current_class::getEntityType();
+		if (is_subclass_of($current_class, __CLASS__)) {
+			return forward_static_call(array($current_class, 'getEntityType'));
 		}
 		throw new \Exception("You're trying to call an entity function on a class that is not an extension of the entity class.");
 	}
