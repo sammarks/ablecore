@@ -32,7 +32,7 @@ class EntityReferenceFieldValue extends FieldValue
 
 		$this->id = $raw['target_id'];
 		$this->target_type = $target_type;
-		$this->raw_entity = Entity::load($target_type, $raw['target_id']);
+		$this->raw_entity = Entity::loadWithType($target_type, $raw['target_id']);
 		if (!$this->raw_entity) {
 			throw new \Exception("The {$target_type} '{$this->id}' does not exist.");
 		}
