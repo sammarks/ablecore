@@ -88,6 +88,9 @@ function ablecore_custom_theme()
  */
 function ablecore_modules_installed(array $modules)
 {
+	// We don't need to handle this if no modules were actually installed...
+	if (count($modules) <= 0) return;
+
 	// Trigger invocation of hook_xautoload() to catch any hooks.
 	$operation = new HookXautoloadOperation();
 	xautoload()->proxyFinder->onFinderInit($operation);
