@@ -26,13 +26,13 @@ class EntityReferenceFieldValue extends FieldValue
 	 */
 	public $target_type;
 
-	public function __construct($type, $raw, $target_type)
+	public function __construct($type, $raw, $target_type, $target_key = 'target_id')
 	{
-		parent::__construct($raw, $raw['target_id'], $type);
+		parent::__construct($raw, $raw[$target_key], $type);
 
-		$this->id = $raw['target_id'];
+		$this->id = $raw[$target_key];
 		$this->target_type = $target_type;
-		$this->raw_entity = Entity::loadWithType($target_type, $raw['target_id']);
+		$this->raw_entity = Entity::loadWithType($target_type, $raw[$target_key]);
 		if (!$this->raw_entity) {
 			throw new \Exception("The {$target_type} '{$this->id}' does not exist.");
 		}

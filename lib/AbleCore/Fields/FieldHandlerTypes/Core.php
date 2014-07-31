@@ -7,6 +7,7 @@ use AbleCore\Fields\FieldValueHandler;
 use AbleCore\Fields\FieldValueTypes\LongTextFieldValue;
 use AbleCore\Fields\FieldValueTypes\ImageFieldValue;
 use AbleCore\Fields\FieldValueTypes\FileFieldValue;
+use AbleCore\Fields\FieldValueTypes\TaxonomyTermReferenceFieldValue;
 use AbleCore\Fields\FieldValue;
 
 class Core extends FieldValueHandler
@@ -64,7 +65,7 @@ class Core extends FieldValueHandler
 		if (!self::checkFieldValue($value, 'tid'))
 			return null;
 
-		return new FieldValue($value, taxonomy_term_load($value['tid']), $type);
+		return new TaxonomyTermReferenceFieldValue($type, $value, 'taxonomy_term');
 	}
 
 	public static function simple($type, $value, $name)
