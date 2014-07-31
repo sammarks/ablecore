@@ -19,7 +19,7 @@ class Core extends FieldValueHandler
 		'list_integer' => 'simple',
 		'list_float' => 'simple',
 		'list_text' => 'simple',
-		'list_boolean' => 'boolean',
+		'list_boolean' => 'listBoolean',
 		'number_integer' => 'simple',
 		'number_decimal' => 'simple',
 		'number_float' => 'simple',
