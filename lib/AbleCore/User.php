@@ -23,13 +23,11 @@ class User extends EntityExtension
 	}
 
 	/**
-	 * Current
+	 * Logged In
 	 *
-	 * Loads the current user.
-	 *
-	 * @return User The current user.
+	 * @return Entity|bool The current logged in user.
 	 */
-	public static function current()
+	public static function loggedIn()
 	{
 		global $user;
 
