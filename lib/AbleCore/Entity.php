@@ -480,14 +480,19 @@ class Entity extends DrupalExtension {
 	 *
 	 * Generates a link to the current entity.
 	 *
-	 * @param string $text    The text to use for the link.
+	 * @param string $text    The text to use for the link. If an empty string is passed,
+	 *                        the label for the entity is used instead.
 	 * @param array  $options Any additional options to pass to l().
 	 *
 	 * @return bool|string Either the HTML link, or false if an error occurred.
 	 * @see l()
 	 */
-	public function link($text, array $options = array())
+	public function link($text = '', array $options = array())
 	{
+		if (!$text) {
+			$text = entity_label($this->type(), $this->base);
+		}
+
 		$url_params = entity_uri($this->type, $this->base);
 		if (is_array($url_params) && array_key_exists('path', $url_params) && array_key_exists('options', $url_params)) {
 			return l($text, $url_params['path'], array_merge($url_params['options'], $options));
