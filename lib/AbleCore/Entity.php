@@ -18,6 +18,13 @@ class Entity extends DrupalExtension {
 	 */
 	protected $is_new = false;
 
+	/**
+	 * Whether the full entity has been loaded.
+	 *
+	 * @var bool
+	 */
+	protected $full_loaded = false;
+
 	public function __construct($type, $definition)
 	{
 		$this->base = $definition;
@@ -252,7 +259,19 @@ class Entity extends DrupalExtension {
 	{
 		$result = $this->field($name);
 		if ($result === false) {
-			return parent::__get($name);
+			try {
+				return parent::__get($name);
+			} catch (\Exception $ex) {
+				if ($this->full_loaded) {
+					throw $ex;
+				} else {
+
+					// If we don't already have the full entity object, load it and try to get the field again.
+					$this->loadFull();
+					return $this->__get($name);
+
+				}
+			}
 		} else {
 			return $result;
 		}
@@ -584,6 +603,17 @@ class Entity extends DrupalExtension {
 		foreach (array_keys($instances) as $field_name) {
 			unset($this->base->$field_name);
 		}
+	}
+
+	/**
+	 * Load Full
+	 *
+	 * Loads the full entity.
+	 */
+	protected function loadFull()
+	{
+		$this->base = entity_load($this->type(), $this->id());
+		$this->full_loaded = true;
 	}
 
 } 

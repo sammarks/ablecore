@@ -102,7 +102,12 @@ class DrupalExtension
 		if ($name == 'base') {
 			return $this->base;
 		}
-		return $this->base->$name;
+
+		if (!isset($this->base->$name)) {
+			throw new \Exception('The property ' . $name . ' doesn\'t exist on the base.');
+		} else {
+			return $this->base->$name;
+		}
 	}
 
 	/**
