@@ -610,7 +610,7 @@ class Entity extends DrupalExtension {
 	 *
 	 * Loads the full entity.
 	 */
-	protected function loadFull()
+	public function loadFull()
 	{
 		$this->base = entity_load_single($this->type(), $this->id());
 		$this->full_loaded = true;
