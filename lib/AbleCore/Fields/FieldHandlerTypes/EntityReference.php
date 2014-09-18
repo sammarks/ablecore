@@ -9,6 +9,7 @@ class EntityReference extends FieldValueHandler
 {
 	public static $configuration = array(
 		'entityreference' => 'reference',
+		'node_reference' => 'nodeReference',
 	);
 
 	public static function reference($type, $value, $name)
@@ -25,5 +26,13 @@ class EntityReference extends FieldValueHandler
 		$target_type = $info['settings']['target_type'];
 
 		return new EntityReferenceFieldValue($type, $value, $target_type);
+	}
+
+	public static function nodeReference($type, $value, $name)
+	{
+		if (!self::checkFieldValue($value, 'nid'))
+			return null;
+
+		return new EntityReferenceFieldValue($type, $value, 'node', 'nid');
 	}
 }
