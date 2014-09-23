@@ -43,7 +43,7 @@ class Node extends EntityExtension {
 			}
 			if (!$result && module_exists('defaultcontent') && function_exists('defaultcontent_get_default')) {
 				$nid = defaultcontent_get_default($identifier);
-				$result = static::load('node', $nid);
+				$result = static::load($nid);
 			}
 			if (!$result) {
 				trigger_error("When loading the node: '{$identifier}', a non-number was given, " .
