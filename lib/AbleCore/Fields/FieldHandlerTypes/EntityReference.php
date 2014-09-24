@@ -10,6 +10,7 @@ class EntityReference extends FieldValueHandler
 	public static $configuration = array(
 		'entityreference' => 'reference',
 		'node_reference' => 'nodeReference',
+		'field_collection' => 'fieldCollection',
 	);
 
 	public static function reference($type, $value, $name)
@@ -34,5 +35,13 @@ class EntityReference extends FieldValueHandler
 			return null;
 
 		return new EntityReferenceFieldValue($type, $value, 'node', 'nid');
+	}
+
+	public static function fieldCollection($type, $value, $name)
+	{
+		if (!self::checkFieldValue($value, 'value'))
+			return null;
+
+		return new EntityReferenceFieldValue($type, $value, 'field_collection_item', 'value', 'revision_id');
 	}
 }

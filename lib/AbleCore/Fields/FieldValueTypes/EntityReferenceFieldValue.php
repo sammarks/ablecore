@@ -26,13 +26,19 @@ class EntityReferenceFieldValue extends FieldValue
 	 */
 	public $target_type;
 
-	public function __construct($type, $raw, $target_type, $target_key = 'target_id')
+	public function __construct($type, $raw, $target_type, $target_key = 'target_id', $revision_key = false)
 	{
 		parent::__construct($raw, $raw[$target_key], $type);
 
 		$this->id = $raw[$target_key];
 		$this->target_type = $target_type;
 		$this->raw_entity = Entity::loadWithType($target_type, $raw[$target_key]);
+
+		// Set the revision if one was supplied.
+		if ($revision_key !== false && array_key_exists($revision_key, $raw)) {
+			$this->raw_entity->setRevision($raw[$revision_key]);
+		}
+
 		if (!$this->raw_entity) {
 			throw new \Exception("The {$target_type} '{$this->id}' does not exist.");
 		}
