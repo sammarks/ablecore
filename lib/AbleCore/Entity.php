@@ -263,6 +263,7 @@ class Entity extends DrupalExtension {
 				return parent::__get($name);
 			} catch (\Exception $ex) {
 				if ($this->full_loaded) {
+					trigger_error('The field ' . $name . ' doesn\'t exist.');
 					return false;
 				} else {
 
