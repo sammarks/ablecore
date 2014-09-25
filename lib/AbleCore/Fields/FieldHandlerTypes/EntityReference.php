@@ -42,6 +42,7 @@ class EntityReference extends FieldValueHandler
 		if (!self::checkFieldValue($value, 'value'))
 			return null;
 
-		return new EntityReferenceFieldValue($type, $value, 'field_collection_item', 'value', 'revision_id');
+		// TODO: Enable revision support for this when https://www.drupal.org/node/2075325 is fixed.
+		return new EntityReferenceFieldValue($type, $value, 'field_collection_item', 'value');
 	}
 }
