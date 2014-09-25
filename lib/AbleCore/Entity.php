@@ -263,7 +263,7 @@ class Entity extends DrupalExtension {
 				return parent::__get($name);
 			} catch (\Exception $ex) {
 				if ($this->full_loaded) {
-					throw $ex;
+					return false;
 				} else {
 
 					// If we don't already have the full entity object, load it and try to get the field again.
