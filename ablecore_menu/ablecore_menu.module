@@ -51,6 +51,17 @@ function ablecore_menu_ablecore_form_info()
 
 function ablecore_menu_init()
 {
+	// Get the active link from Drupal.
+	$preferred = menu_link_get_preferred();
+
+	// If we have a menu link that doesn't have any path arguments in it, use
+	// it and don't modify the path. Individual menu links pointing to specific
+	// pages will always override ablecore_menu.
+	if ($preferred && array_key_exists('link_path', $preferred) &&
+		strpos($preferred['link_path'], '%') === false) {
+		return;
+	}
+
 	// Get the current menu item and modify the menu tree path.
 	$active_item = ablecore_menu_get_preferred_link();
 	if ($active_item === false) return;
