@@ -173,7 +173,10 @@ class ContentType {
 	{
 		$class = '\\AbleCore\\Install\\Helpers\\' . $type;
 		if (!class_exists($class)) {
-			throw new \Exception('The field type ' . $type . ' does not exist.');
+			$class = '\\AbleCore\\Install\\Helpers\\FieldInstances\\' . $type;
+			if (!class_exists($class)) {
+				throw new \Exception('The field type ' . $type . ' does not exist.');
+			}
 		}
 
 		/** @var FieldInstance $instance */
