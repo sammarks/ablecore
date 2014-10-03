@@ -89,7 +89,18 @@ class FieldInstance {
 		} else {
 			$instance = new self($field, $bundle, $entity_type);
 		}
-		return $instance->setRequired();
+		return $instance->setDefaults();
+	}
+
+	/**
+	 * Set Defaults
+	 *
+	 * @return $this
+	 */
+	public function setDefaults()
+	{
+		$this->setRequired(false);
+		return $this;
 	}
 
 	/**
