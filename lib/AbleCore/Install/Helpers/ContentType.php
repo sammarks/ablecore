@@ -159,16 +159,25 @@ class ContentType {
 	 * save the created field instance.
 	 *
 	 * @param Field  $field    The field to attach to the content type.
+	 * @param string $type     The class to create.
 	 * @param string $label    The translated label for the field. If this is null, the default field
 	 *                         label is used.
 	 * @param bool   $required Whether or not the field is required.
 	 * @param int    $weight   The weight of the field.
 	 *
 	 * @return FieldInstance The new field instance, not saved.
+	 *
+	 * @throws \Exception
 	 */
-	public function addField(Field $field, $label = null, $required = false, $weight = 1)
+	public function addField(Field $field, $type = 'FieldInstance', $label = null, $required = false, $weight = 1)
 	{
-		$instance = FieldInstance::create($field, $this->definition['type']);
+		$class = '\\AbleCore\\Install\\Helpers\\' . $type;
+		if (!class_exists($class)) {
+			throw new \Exception('The field type ' . $type . ' does not exist.');
+		}
+
+		/** @var FieldInstance $instance */
+		$instance = forward_static_call(array($class, 'create'), $field, $this->definition['type']);
 		$instance->setLabel($label ? $label : $field->getLabel());
 		$instance->setRequired($required);
 		$instance->setWeight($weight);
