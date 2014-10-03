@@ -67,7 +67,7 @@ class ModuleInstaller {
 	{
 		$class = $this->getInstallerNamespacePrefix() . $task_name;
 		if (class_exists($class)) {
-			if ($class instanceof Task) {
+			if (is_subclass_of($class, '\\AbleCore\\Install\\Task')) {
 				return new $class($task_runner);
 			} else {
 				throw new \Exception('The Task ' . $class . ' for the module ' . $this->module . ' is invalid.');
@@ -110,7 +110,7 @@ class ModuleInstaller {
 		$prefix = $this->getInstallerNamespacePrefix();
 		if (class_exists($prefix . 'TaskRunner', true)) {
 			$class = $prefix . 'TaskRunner';
-			if ($class instanceof TaskRunnerInterface) {
+			if (is_subclass_of($class, '\\AbleCore\\Install\\TaskRunnerInterface')) {
 				return new $class();
 			} else {
 				throw new \Exception('The TaskRunner class for the module ' . $this->module . ' is invalid.');
