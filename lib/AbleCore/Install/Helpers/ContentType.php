@@ -153,6 +153,28 @@ class ContentType {
 	}
 
 	/**
+	 * Add Field
+	 *
+	 * Adds a field and associates it with the existing content type. This function does not
+	 * save the created field instance.
+	 *
+	 * @param Field  $field    The field to attach to the content type.
+	 * @param string $label    The translated label for the field.
+	 * @param bool   $required Whether or not the field is required.
+	 * @param int    $weight   The weight of the field.
+	 *
+	 * @return FieldInstance The new field instance, not saved.
+	 */
+	public function addField(Field $field, $label, $required = false, $weight = 1)
+	{
+		$instance = FieldInstance::create($field, $this->definition['type']);
+		$instance->setLabel($label);
+		$instance->setRequired($required);
+		$instance->setWeight($weight);
+		return $instance;
+	}
+
+	/**
 	 * Save Options
 	 *
 	 * Saves the options for the content type to the variables table.

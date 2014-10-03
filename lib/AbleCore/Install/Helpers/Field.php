@@ -14,12 +14,12 @@ class Field {
 	 * The name of the field.
 	 * @var null|string
 	 */
-	protected $field_name = null;
+	protected $name = null;
 
 	public function __construct($field_name, array $definition)
 	{
 		$this->definition = $definition;
-		$this->field_name = $field_name;
+		$this->name = $field_name;
 	}
 
 	/**
@@ -96,6 +96,15 @@ class Field {
 	}
 
 	/**
+	 * Get Name
+	 * @return null|string The field name.
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
+
+	/**
 	 * Save
 	 *
 	 * @return $this
@@ -104,7 +113,7 @@ class Field {
 	 */
 	public function save()
 	{
-		if (self::exists($this->field_name)) {
+		if (self::exists($this->name)) {
 			field_update_field($this->definition);
 		} else {
 			field_create_field($this->definition);
