@@ -9,6 +9,11 @@ class HookUtils {
 		return module_implements('ablecore');
 	}
 
+	public static function isAbleCoreModule($module)
+	{
+		return function_exists($module . '_ablecore');
+	}
+
 	public static function includeDirectory($module, $directory)
 	{
 		$module_path = drupal_get_path('module', $module);
