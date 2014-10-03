@@ -6,9 +6,9 @@ class ContentType {
 
 	/**
 	 * The definition for the content type.
-	 * @var array|object
+	 * @var object
 	 */
-	public $definition = array();
+	public $definition = null;
 
 	/**
 	 * The current list of enabled options for the content type.
