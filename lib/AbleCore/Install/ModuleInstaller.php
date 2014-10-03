@@ -39,11 +39,11 @@ class ModuleInstaller {
 	 */
 	public function install()
 	{
-		$taskRunner = $this->getTaskRunnerClass();
-		$tasks = $taskRunner->getTasks();
+		$task_runner = $this->getTaskRunnerClass();
+		$tasks = $task_runner->getTasks();
 		foreach ($tasks as $task) {
-			$taskClass = $this->getTaskClass($task, $taskRunner);
-			$result = $this->runTask($taskClass);
+			$task_class = $this->getTaskClass($task, $task_runner);
+			$result = $this->runTask($task_class);
 			if ($result === false) {
 				watchdog('ablecore', 'The installation operation failed on the task !task for the module !module', array(
 					'!task' => $task,
@@ -57,18 +57,18 @@ class ModuleInstaller {
 	/**
 	 * Get Task Class
 	 *
-	 * @param string              $taskName   The name of the task to execute.
-	 * @param TaskRunnerInterface $taskRunner The current task runner.
+	 * @param string              $task_name   The name of the task to execute.
+	 * @param TaskRunnerInterface $task_runner The current task runner.
 	 *
 	 * @return Task The task.
 	 * @throws \Exception
 	 */
-	protected function getTaskClass($taskName, TaskRunnerInterface $taskRunner)
+	protected function getTaskClass($task_name, TaskRunnerInterface $task_runner)
 	{
-		$class = $this->getInstallerNamespacePrefix() . $taskName;
+		$class = $this->getInstallerNamespacePrefix() . $task_name;
 		if (class_exists($class)) {
 			if ($class instanceof Task) {
-				return new $class($taskRunner);
+				return new $class($task_runner);
 			} else {
 				throw new \Exception('The Task ' . $class . ' for the module ' . $this->module . ' is invalid.');
 			}

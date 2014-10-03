@@ -4,7 +4,7 @@ namespace AbleCore\Install;
 
 interface TaskInterface {
 
-	public function __construct(TaskRunnerInterface $taskRunner);
+	public function __construct(TaskRunnerInterface $task_runner);
 
 	/**
 	 * Run
@@ -23,11 +23,11 @@ abstract class Task implements TaskInterface {
 	 * The task runner executing the current task.
 	 * @var TaskRunnerInterface|null
 	 */
-	protected $taskRunner = null;
+	protected $task_runner = null;
 
-	public function __construct(TaskRunnerInterface $taskRunner)
+	public function __construct(TaskRunnerInterface $task_runner)
 	{
-		$this->taskRunner = $taskRunner;
+		$this->task_runner = $task_runner;
 	}
 
 	public abstract function run();
