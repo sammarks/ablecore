@@ -119,11 +119,15 @@ class ContentType {
 	 * Save
 	 *
 	 * Saves the content type.
+	 *
+	 * @return $this
 	 */
 	public function save()
 	{
 		node_type_save($this->definition);
 		$this->saveOptions();
+
+		return $this;
 	}
 
 	/**
