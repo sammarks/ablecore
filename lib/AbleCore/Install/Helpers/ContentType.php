@@ -21,6 +21,11 @@ class ContentType {
 		'revision' => false,
 	);
 
+	/**
+	 * @var bool Whether the content type was saved or not.
+	 */
+	protected $saved = false;
+
 	public function __construct($name, $human_name)
 	{
 		$this->definition = array(
@@ -126,8 +131,25 @@ class ContentType {
 	{
 		node_type_save($this->definition);
 		$this->saveOptions();
+		$this->saved = true;
 
 		return $this;
+	}
+
+	/**
+	 * Add Body Field
+	 *
+	 * @param string $label The label of the body field.
+	 *
+	 * @return array The body field instance.
+	 * @throws \Exception
+	 */
+	public function addBodyField($label = 'Body')
+	{
+		if (!$this->saved) {
+			throw new \Exception('The content type must be saved before attempting to add a body field to it.');
+		}
+		return node_add_body_field($this->definition, $label);
 	}
 
 	/**
