@@ -20,6 +20,8 @@ class Field {
 	{
 		$this->definition = $definition;
 		$this->name = $field_name;
+
+		$this->definition['field_name'] = $this->name;
 	}
 
 	/**
