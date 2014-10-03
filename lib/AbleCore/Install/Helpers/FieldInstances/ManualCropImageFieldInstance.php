@@ -182,13 +182,18 @@ class ManualCropImageFieldInstance extends ImageFieldInstance {
 	/**
 	 * Set Styles List
 	 *
-	 * @param array $styles A 1-dimensional array containing a list of styles to include.
+	 * @param array $styles   A 1-dimensional array containing a list of styles to include.
+	 * @param bool  $required Whether or not to make the specified styles required.
 	 *
 	 * @return $this
 	 */
-	public function setStylesList(array $styles)
+	public function setStylesList(array $styles, $required = false)
 	{
-		return $this->setWidgetSetting('manualcrop_styles_list', $this->prepareStylesArray($styles));
+		$this->setWidgetSetting('manualcrop_styles_list', $this->prepareStylesArray($styles));
+		if ($required) {
+			$this->setRequiredStyles($styles);
+		}
+		return $this;
 	}
 
 	/**
