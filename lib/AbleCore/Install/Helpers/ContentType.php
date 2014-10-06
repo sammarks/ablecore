@@ -28,7 +28,7 @@ class ContentType {
 
 	public function __construct($name, $human_name)
 	{
-		$this->definition = array(
+		$this->definition = (object)array(
 			'type' => $name,
 			'name' => $human_name,
 			'base' => 'node_content',
@@ -64,7 +64,7 @@ class ContentType {
 	 */
 	public function setDescription($description)
 	{
-		$this->definition['description'] = $description;
+		$this->definition->description = $description;
 		return $this;
 	}
 
@@ -180,7 +180,7 @@ class ContentType {
 		}
 
 		/** @var FieldInstance $instance */
-		$instance = forward_static_call(array($class, 'create'), $field, $this->definition['type']);
+		$instance = forward_static_call(array($class, 'create'), $field, $this->definition->type);
 		$instance->setLabel($label ? $label : $field->getLabel());
 		$instance->setRequired($required);
 		$instance->setWeight($weight);
@@ -201,7 +201,7 @@ class ContentType {
 			}
 		}
 
-		variable_set('node_options_' . $this->definition['name'], $options);
+		variable_set('node_options_' . $this->definition->name, $options);
 	}
 
 } 
