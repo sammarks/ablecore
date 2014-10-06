@@ -52,7 +52,7 @@ class ContentType {
 	 */
 	public static function init($name, $human_name)
 	{
-		return new self($name, $human_name);
+		return new static($name, $human_name);
 	}
 
 	/**

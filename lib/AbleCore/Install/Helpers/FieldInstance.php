@@ -56,7 +56,7 @@ class FieldInstance {
 		if (!$instance || !$field) {
 			return false;
 		}
-		return new self($field, $bundle, $entity_type, $instance);
+		return new static($field, $bundle, $entity_type, $instance);
 	}
 
 	/**
@@ -85,9 +85,9 @@ class FieldInstance {
 	public static function create(Field $field, $bundle, $entity_type = 'node')
 	{
 		if (self::exists($field->getName(), $bundle, $entity_type)) {
-			$instance = self::load($field->getName(), $bundle, $entity_type);
+			$instance = static::load($field->getName(), $bundle, $entity_type);
 		} else {
-			$instance = new self($field, $bundle, $entity_type);
+			$instance = new static($field, $bundle, $entity_type);
 		}
 		return $instance->setDefaults();
 	}
@@ -177,7 +177,7 @@ class FieldInstance {
 	 */
 	public function setWidgetSetting($key, $value)
 	{
-		self::verifyChildIsArray($this->definition, $key);
+		static::verifyChildIsArray($this->definition, $key);
 		$this->definition['widget'][$key] = $value;
 		return $this;
 	}
@@ -193,8 +193,8 @@ class FieldInstance {
 	 */
 	public function setDisplaySetting($display, $key, $value)
 	{
-		self::verifyChildIsArray($this->definition, 'display');
-		self::verifyChildIsArray($this->definition['display'], $display);
+		static::verifyChildIsArray($this->definition, 'display');
+		static::verifyChildIsArray($this->definition['display'], $display);
 		$this->definition['display'][$display][$key] = $value;
 		return $this;
 	}
@@ -209,7 +209,7 @@ class FieldInstance {
 	 */
 	public function setSetting($key, $value)
 	{
-		self::verifyChildIsArray($this->definition, 'settings');
+		static::verifyChildIsArray($this->definition, 'settings');
 		$this->definition['settings'][$key] = $value;
 		return $this;
 	}
@@ -222,7 +222,7 @@ class FieldInstance {
 	 */
 	public function save()
 	{
-		if (self::exists($this->field->getName(), $this->bundle, $this->entity_type)) {
+		if (static::exists($this->field->getName(), $this->bundle, $this->entity_type)) {
 			field_update_instance($this->definition);
 		} else {
 			field_create_instance($this->definition);

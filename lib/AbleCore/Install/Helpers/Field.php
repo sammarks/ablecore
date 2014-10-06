@@ -37,7 +37,7 @@ class Field {
 		if (!$definition) {
 			return false;
 		}
-		return new self($field_name, $definition);
+		return new static($field_name, $definition);
 	}
 
 	/**
@@ -61,10 +61,10 @@ class Field {
 	 */
 	public static function create($field_name)
 	{
-		if (self::exists($field_name)) {
-			$instance = self::load($field_name);
+		if (static::exists($field_name)) {
+			$instance = static::load($field_name);
 		} else {
-			$instance = new self($field_name, array());
+			$instance = new static($field_name, array());
 		}
 		return $instance->setType();
 	}
@@ -79,7 +79,7 @@ class Field {
 	 */
 	public static function createAndSave($field_name, $type = FieldTypes::TEXT)
 	{
-		$instance = self::create($field_name);
+		$instance = static::create($field_name);
 		$instance->setType($type);
 		return $instance->save();
 	}
@@ -126,7 +126,7 @@ class Field {
 	 */
 	public function save()
 	{
-		if (self::exists($this->name)) {
+		if (static::exists($this->name)) {
 			field_update_field($this->definition);
 		} else {
 			field_create_field($this->definition);
