@@ -151,7 +151,7 @@ class FieldInstance {
 	 */
 	public function setWeight($weight)
 	{
-		return $this->setWidgetSetting('weight', $weight);
+		return $this->setWidgetValue('weight', $weight);
 	}
 
 	/**
@@ -168,17 +168,33 @@ class FieldInstance {
 	}
 
 	/**
+	 * Set Widget Value
+	 *
+	 * @param mixed $key   The widget value key.
+	 * @param mixed $value The widget value.
+	 *
+	 * @return $this
+	 */
+	public function setWidgetValue($key, $value)
+	{
+		static::verifyChildIsArray($this->definition, 'widget');
+		$this->definition['widget'][$key] = $value;
+		return $this;
+	}
+
+	/**
 	 * Set Widget Setting
 	 *
-	 * @param mixed $key   The widget setting key.
+	 * @param mixed $key The widget setting key.
 	 * @param mixed $value The widget setting value.
 	 *
 	 * @return $this
 	 */
 	public function setWidgetSetting($key, $value)
 	{
-		static::verifyChildIsArray($this->definition, $key);
-		$this->definition['widget'][$key] = $value;
+		static::verifyChildIsArray($this->definition, 'widget');
+		static::verifyChildIsArray($this->definition['widget'], 'settings');
+		$this->definition['widget']['settings'][$key] = $value;
 		return $this;
 	}
 
@@ -191,7 +207,7 @@ class FieldInstance {
 	 *
 	 * @return $this
 	 */
-	public function setDisplaySetting($display, $key, $value)
+	public function setDisplayValue($display, $key, $value)
 	{
 		static::verifyChildIsArray($this->definition, 'display');
 		static::verifyChildIsArray($this->definition['display'], $display);

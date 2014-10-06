@@ -11,6 +11,8 @@ class ManualCropImageFieldInstance extends ImageFieldInstance {
 
 	public function setDefaults()
 	{
+		parent::setDefaults();
+
 		$this->setWidgetSetting('manualcrop_enable', true);
 		$this->enableThumbnailList();
 		$this->setStylesListMode(self::LIST_MODE_INCLUDE);
