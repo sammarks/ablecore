@@ -6,9 +6,9 @@ class Field {
 
 	/**
 	 * The definition for the field.
-	 * @var \stdClass|null
+	 * @var array
 	 */
-	protected $definition = null;
+	protected $definition = array();
 
 	/**
 	 * The name of the field.
@@ -16,18 +16,12 @@ class Field {
 	 */
 	protected $name = null;
 
-	public function __construct($field_name, $definition = null)
+	public function __construct($field_name, array $definition)
 	{
-		if ($definition === null) {
-			$definition = new \stdClass();
-		}
-		if (is_array($definition)) {
-			$definition = (object)$definition;
-		}
 		$this->definition = $definition;
 		$this->name = $field_name;
 
-		$this->definition->field_name = $this->name;
+		$this->definition['field_name'] = $this->name;
 	}
 
 	/**
@@ -99,7 +93,7 @@ class Field {
 	 */
 	public function setType($type = FieldTypes::TEXT)
 	{
-		$this->definition->type = $type;
+		$this->definition['type'] = $type;
 		return $this;
 	}
 
@@ -118,8 +112,8 @@ class Field {
 	 */
 	public function getLabel()
 	{
-		if (property_exists($this->definition, 'label')) {
-			return $this->definition->label;
+		if (array_key_exists('label', $this->definition)) {
+			return $this->definition['label'];
 		} else return false;
 	}
 
