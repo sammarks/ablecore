@@ -242,14 +242,8 @@ class FieldInstance {
 	 */
 	protected static function verifyChildIsArray(&$parent, $child)
 	{
-		if (is_object($parent)) {
-			if (!property_exists($parent, $child)) {
-				$parent->$child = array();
-			}
-		} elseif (is_array($parent)) {
-			if (!array_key_exists($child, $parent) || !is_array($parent[$child])) {
-				$parent[$child] = array();
-			}
+		if (!array_key_exists($child, $parent) || !is_array($parent[$child])) {
+			$parent[$child] = array();
 		}
 	}
 
