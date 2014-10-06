@@ -169,7 +169,7 @@ class ContentType {
 	 *
 	 * @throws \Exception
 	 */
-	public function addField(Field $field, $type = 'FieldInstance', $label = null, $required = false, $weight = 1)
+	public function addField(Field $field, $label = null, $type = 'FieldInstance', $required = false, $weight = 1)
 	{
 		$class = '\\AbleCore\\Install\\Helpers\\' . $type;
 		if (!class_exists($class)) {
@@ -181,6 +181,7 @@ class ContentType {
 
 		/** @var FieldInstance $instance */
 		$instance = forward_static_call(array($class, 'create'), $field, $this->definition->type);
+		$instance->setLabel($label);
 		$instance->setRequired($required);
 		$instance->setWeight($weight);
 		return $instance;
