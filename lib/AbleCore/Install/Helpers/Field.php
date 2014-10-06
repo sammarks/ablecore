@@ -107,17 +107,6 @@ class Field {
 	}
 
 	/**
-	 * Get Label
-	 * @return string|false The label for the field. False if it doesn't exist.
-	 */
-	public function getLabel()
-	{
-		if (array_key_exists('label', $this->definition)) {
-			return $this->definition['label'];
-		} else return false;
-	}
-
-	/**
 	 * Save
 	 *
 	 * @return $this

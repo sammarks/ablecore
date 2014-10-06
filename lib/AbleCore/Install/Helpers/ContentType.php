@@ -181,7 +181,6 @@ class ContentType {
 
 		/** @var FieldInstance $instance */
 		$instance = forward_static_call(array($class, 'create'), $field, $this->definition->type);
-		$instance->setLabel($label ? $label : $field->getLabel());
 		$instance->setRequired($required);
 		$instance->setWeight($weight);
 		return $instance;
