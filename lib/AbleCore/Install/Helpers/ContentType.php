@@ -50,7 +50,7 @@ class ContentType {
 	 *
 	 * @return ContentType The content type object.
 	 */
-	public static function init($name, $human_name)
+	public static function create($name, $human_name)
 	{
 		return new static($name, $human_name);
 	}
