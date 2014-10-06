@@ -33,7 +33,7 @@ class ContentType {
 			'name' => $human_name,
 			'base' => 'node_content',
 			'custom' => 1,
-			'locked' => 0,
+			'locked' => 1,
 			'modified' => 1,
 		);
 		$this->definition = node_type_set_defaults($this->definition);
