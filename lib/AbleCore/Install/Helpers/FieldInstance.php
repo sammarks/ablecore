@@ -6,9 +6,9 @@ class FieldInstance {
 
 	/**
 	 * The definition of the field instance.
-	 * @var object
+	 * @var array
 	 */
-	protected $definition = null;
+	protected $definition = array();
 
 	/**
 	 * The associated field.
@@ -28,16 +28,16 @@ class FieldInstance {
 	 */
 	protected $entity_type = null;
 
-	public function __construct(Field $field, $bundle, $entity_type = 'node', $definition = null)
+	public function __construct(Field $field, $bundle, $entity_type = 'node', array $definition = array())
 	{
 		$this->field = $field;
 		$this->bundle = $bundle;
 		$this->entity_type = $entity_type;
 		$this->definition = $definition;
 
-		$this->definition->field_name = $field->getName();
-		$this->definition->entity_type = $this->entity_type;
-		$this->definition->bundle = $this->bundle;
+		$this->definition['field_name'] = $field->getName();
+		$this->definition['entity_type'] = $this->entity_type;
+		$this->definition['bundle'] = $this->bundle;
 	}
 
 	/**
@@ -112,7 +112,7 @@ class FieldInstance {
 	 */
 	public function setLabel($label)
 	{
-		$this->definition->label = $label;
+		$this->definition['label'] = $label;
 		return $this;
 	}
 
@@ -125,7 +125,7 @@ class FieldInstance {
 	 */
 	public function setDescription($description)
 	{
-		$this->definition->description = $description;
+		$this->definition['description'] = $description;
 		return $this;
 	}
 
@@ -138,7 +138,7 @@ class FieldInstance {
 	 */
 	public function setRequired($required = false)
 	{
-		$this->definition->required = $required;
+		$this->definition['required'] = $required;
 		return $this;
 	}
 
@@ -163,7 +163,7 @@ class FieldInstance {
 	 */
 	public function setDefaultValue($default_value)
 	{
-		$this->definition->default_value = $default_value;
+		$this->definition['default_value'] = $default_value;
 		return $this;
 	}
 
@@ -178,7 +178,7 @@ class FieldInstance {
 	public function setWidgetSetting($key, $value)
 	{
 		self::verifyChildIsArray($this->definition, $key);
-		$this->definition->widget[$key] = $value;
+		$this->definition['widget'][$key] = $value;
 		return $this;
 	}
 
@@ -194,8 +194,8 @@ class FieldInstance {
 	public function setDisplaySetting($display, $key, $value)
 	{
 		self::verifyChildIsArray($this->definition, 'display');
-		self::verifyChildIsArray($this->definition->display, $display);
-		$this->definition->display[$display][$key] = $value;
+		self::verifyChildIsArray($this->definition['display'], $display);
+		$this->definition['display'][$display][$key] = $value;
 		return $this;
 	}
 
@@ -210,7 +210,7 @@ class FieldInstance {
 	public function setSetting($key, $value)
 	{
 		self::verifyChildIsArray($this->definition, 'settings');
-		$this->definition->settings[$key] = $value;
+		$this->definition['settings'][$key] = $value;
 		return $this;
 	}
 
