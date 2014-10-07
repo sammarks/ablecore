@@ -72,10 +72,11 @@ class TaxonomyVocabulary {
 		$this->refresh();
 		if (!empty($this->definition->vid)) {
 			if (!$this->vocabularyHasTerms($this->definition->vid)) {
-				foreach ($terms as $term) {
+				foreach ($terms as $index => $term) {
 					$new_term = (object)array(
 						'vid' => $this->definition->vid,
 						'name' => $term,
+						'weight' => $index,
 					);
 					taxonomy_term_save($new_term);
 				}
