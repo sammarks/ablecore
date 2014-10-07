@@ -8,7 +8,7 @@ class Field {
 	 * The definition for the field.
 	 * @var array
 	 */
-	protected $definition = array();
+	public $definition = array();
 
 	/**
 	 * The name of the field.
