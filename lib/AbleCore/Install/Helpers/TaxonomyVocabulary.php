@@ -34,7 +34,15 @@ class TaxonomyVocabulary {
 	 */
 	public static function create($machine_name, $name)
 	{
-		return new static($name, $machine_name, new \stdClass());
+		$vocab = taxonomy_vocabulary_machine_name_load($machine_name);
+		if ($vocab) {
+			$instance = static::load($vocab);
+			$instance->definition->name = $name;
+			$instance->definition->machine_name = $machine_name;
+			return $instance;
+		} else {
+			return new static($name, $machine_name, new \stdClass());
+		}
 	}
 
 	/**
