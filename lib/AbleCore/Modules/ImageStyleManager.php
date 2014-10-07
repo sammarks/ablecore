@@ -28,7 +28,7 @@ class ImageStyleManager {
 	public function define($name, $label, $effects = array())
 	{
 		$style = new ImageStyle($name, $label, $effects);
-		$this->styles[] = $name;
+		$this->styles[] = $style;
 		return $style;
 	}
 
