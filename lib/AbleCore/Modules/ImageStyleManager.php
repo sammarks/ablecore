@@ -4,41 +4,48 @@ namespace AbleCore\Modules;
 
 class ImageStyleManager {
 
-	private $generated = array();
+	protected $styles = array();
 
+	/**
+	 * Init
+	 *
+	 * @return ImageStyleManager A new instance of the ImageStyleManager.
+	 */
 	public static function init()
 	{
 		return new self();
 	}
 
+	/**
+	 * Define
+	 *
+	 * @param string $name    The machine name of the image style.
+	 * @param string $label   The human-readable label of the image style.
+	 * @param array  $effects An array of effects to attach to the style.
+	 *
+	 * @return ImageStyle The generated image style.
+	 */
 	public function define($name, $label, $effects = array())
 	{
-		$this->generated[$name] = array(
-			'label' => $label,
-			'effects' => $effects,
-		);
-		return $this;
+		$style = new ImageStyle($name, $label, $effects);
+		$this->styles[] = $name;
+		return $style;
 	}
 
-	public function defineScale($name, $label, $width = null, $height = null, $upscale = false)
-	{
-		$effects = array();
-		$scale_effect = array(
-			'name' => 'image_scale',
-			'data' => array(),
-		);
-		if ($width !== null)
-			$scale_effect['data']['width'] = $width;
-		if ($height !== null)
-			$scale_effect['data']['height'] = $height;
-		$scale_effect['data']['upscale'] = $upscale;
-		$effects[] = $scale_effect;
-		return $this->define($name, $label, $effects);
-	}
-
+	/**
+	 * Finish
+	 *
+	 * @return array The final result, ready to pass to hook_image_default_styles()
+	 */
 	public function fin()
 	{
-		return $this->generated;
+		$generated = array();
+		foreach ($this->styles as $style) {
+			/** @var ImageStyle $style */
+			$generated[$style->getName()] = $style->getDefinition();
+		}
+
+		return $generated;
 	}
 
 }
