@@ -64,6 +64,8 @@ class TaxonomyVocabulary {
 	 * Provide some default terms for the vocabulary.
 	 *
 	 * @param array $terms A single dimensional array of term names.
+	 *
+	 * @return $this
 	 */
 	public function seed(array $terms = array())
 	{
@@ -78,6 +80,8 @@ class TaxonomyVocabulary {
 				}
 			}
 		}
+
+		return $this;
 	}
 
 	/**
