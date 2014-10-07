@@ -41,7 +41,7 @@ class TaxonomyVocabulary {
 			$instance->definition->machine_name = $machine_name;
 			return $instance;
 		} else {
-			return new static($name, $machine_name, new \stdClass());
+			return new static($machine_name, $name, new \stdClass());
 		}
 	}
 
