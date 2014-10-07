@@ -69,6 +69,7 @@ class TaxonomyVocabulary {
 	 */
 	public function seed(array $terms = array())
 	{
+		$this->refresh();
 		if (!empty($this->definition->vid)) {
 			if (!$this->vocabularyHasTerms($this->definition->vid)) {
 				foreach ($terms as $term) {
@@ -100,6 +101,16 @@ class TaxonomyVocabulary {
 		$results = $query->execute()->fetchAll();
 
 		return (count($results) > 0);
+	}
+
+	/**
+	 * Refresh the vocabulary from the database.
+	 */
+	protected function refresh()
+	{
+		if (empty($this->definition->vid)) {
+			$this->definition = taxonomy_vocabulary_machine_name_load($this->machine_name);
+		}
 	}
 
 	/**
