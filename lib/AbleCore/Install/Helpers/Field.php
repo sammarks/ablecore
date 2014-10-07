@@ -98,6 +98,20 @@ class Field {
 	}
 
 	/**
+	 * Set Setting
+	 *
+	 * @param string $key The setting key.
+	 * @param string $value The value for that key.
+	 */
+	public function setSetting($key, $value)
+	{
+		if (empty($this->definition['settings']) || !is_array($this->definition['settings'])) {
+			$this->definition['settings'] = array();
+		}
+		$this->definition['settings'][$key] = $value;
+	}
+
+	/**
 	 * Get Name
 	 * @return null|string The field name.
 	 */
