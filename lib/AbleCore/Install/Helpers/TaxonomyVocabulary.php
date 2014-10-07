@@ -117,10 +117,13 @@ class TaxonomyVocabulary {
 	 * Save
 	 *
 	 * Save the vocabulary.
+	 *
+	 * @return $this
 	 */
 	public function save()
 	{
 		taxonomy_vocabulary_save($this->definition);
+		return $this;
 	}
 
 } 
