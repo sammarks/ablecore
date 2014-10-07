@@ -36,16 +36,18 @@ class ImageStyle {
 	 * @param int  $width   The width to scale to (optional).
 	 * @param int  $height  The height to scale to (optional).
 	 * @param bool $upscale Whether or not to upscale the image.
+	 * @param int  $weight  The weight of the effect.
 	 *
 	 * @return $this
 	 */
-	public function addScaleEffect($width = null, $height = null, $upscale = false)
+	public function addScaleEffect($width = null, $height = null, $upscale = false, $weight = 0)
 	{
 		$effect = array(
 			'name' => 'image_scale',
 			'data' => array(
 				'upscale' => $upscale,
 			),
+			'weight' => $weight,
 		);
 		if ($width !== null)
 			$effect['data']['width'] = $width;
@@ -64,10 +66,11 @@ class ImageStyle {
 	 * @param bool $respect_minimum    If true, make sure the selected crop area is at least as big as
 	 *                                 the destination size. This doesn't enforce minimum image dimensions.
 	 * @param bool $only_scale_if_crop If true, only scale the image if it was manually cropped.
+	 * @param int  $weight             The weight of the effect.
 	 *
 	 * @return ImageStyle
 	 */
-	public function addManualCropAndScaleEffect($width, $height, $upscale = false, $respect_minimum = true, $only_scale_if_crop = false)
+	public function addManualCropAndScaleEffect($width, $height, $upscale = false, $respect_minimum = true, $only_scale_if_crop = false, $weight = 0)
 	{
 		$effect = array(
 			'name' => 'manualcrop_crop_and_scale',
@@ -77,7 +80,9 @@ class ImageStyle {
 				'onlyscaleifcrop' => $only_scale_if_crop,
 				'width' => $width,
 				'height' => $height,
-			)
+				'style_name' => $this->name,
+			),
+			'weight' => $weight,
 		);
 
 		return $this->addEffect($effect);
