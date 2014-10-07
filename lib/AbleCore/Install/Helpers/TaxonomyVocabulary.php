@@ -36,7 +36,7 @@ class TaxonomyVocabulary {
 	{
 		$vocab = taxonomy_vocabulary_machine_name_load($machine_name);
 		if ($vocab) {
-			$instance = static::load($vocab);
+			$instance = static::load($machine_name);
 			$instance->definition->name = $name;
 			$instance->definition->machine_name = $machine_name;
 			return $instance;
