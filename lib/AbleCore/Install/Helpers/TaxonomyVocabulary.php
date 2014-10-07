@@ -71,7 +71,7 @@ class TaxonomyVocabulary {
 	{
 		$this->refresh();
 		if (!empty($this->definition->vid)) {
-			if (!$this->vocabularyHasTerms($this->definition->vid)) {
+			if (!static::vocabularyHasTerms($this->definition->vid)) {
 				foreach ($terms as $index => $term) {
 					$new_term = (object)array(
 						'vid' => $this->definition->vid,
@@ -93,7 +93,7 @@ class TaxonomyVocabulary {
 	 *
 	 * @return bool
 	 */
-	protected function vocabularyHasTerms($vid)
+	public static function vocabularyHasTerms($vid)
 	{
 		$query = db_select('taxonomy_term_data', 'td');
 		$query->addField('td', 'tid');
