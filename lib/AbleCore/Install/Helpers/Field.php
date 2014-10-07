@@ -102,6 +102,8 @@ class Field {
 	 *
 	 * @param string $key The setting key.
 	 * @param string $value The value for that key.
+	 *
+	 * @return $this
 	 */
 	public function setSetting($key, $value)
 	{
@@ -109,6 +111,8 @@ class Field {
 			$this->definition['settings'] = array();
 		}
 		$this->definition['settings'][$key] = $value;
+
+		return $this;
 	}
 
 	/**
