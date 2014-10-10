@@ -41,7 +41,7 @@ class ContentType {
 	}
 
 	/**
-	 * Init
+	 * Create
 	 *
 	 * Creates a new content type.
 	 *
@@ -53,6 +53,24 @@ class ContentType {
 	public static function create($name, $human_name)
 	{
 		return new static($name, $human_name);
+	}
+
+	/**
+	 * Load
+	 *
+	 * @param string $name The name of the existing content type.
+	 *
+	 * @return bool|static Either a new instance of this class with the content type, or false.
+	 */
+	public static function load($name)
+	{
+		if ($content_type = node_type_load($name)) {
+			$instance = new static($name, $content_type->name);
+			$instance->definition = $content_type;
+			return $instance;
+		}
+
+		return false;
 	}
 
 	/**
