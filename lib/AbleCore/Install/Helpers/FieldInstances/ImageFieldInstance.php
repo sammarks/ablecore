@@ -4,6 +4,12 @@ namespace AbleCore\Install\Helpers\FieldInstances;
 
 class ImageFieldInstance extends FileFieldInstance {
 
+	public function setDefaults()
+	{
+		parent::setDefaults();
+		$this->setExtensions(self::EXTENSIONS_IMAGE);
+	}
+
 	/**
 	 * Set Minimum Resolution
 	 *
@@ -81,5 +87,4 @@ class ImageFieldInstance extends FileFieldInstance {
 	{
 		return $this->setSetting('title_field', false);
 	}
-
 }
