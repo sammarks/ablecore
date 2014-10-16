@@ -5,6 +5,13 @@ namespace AbleCore\Install\Helpers;
 class ContentType {
 
 	/**
+	 * @TODO: Consolidate all of these classes into a single base class. DRY.
+	 * @TODO: Make sure these classes have proper constructors. We can probably replace the create function with
+	 *      the constructor.
+	 * @TODO: See if we can integrate these classes with the node field integration.
+	 */
+
+	/**
 	 * The definition for the content type.
 	 * @var object
 	 */
