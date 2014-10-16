@@ -72,13 +72,21 @@ class TaxonomyVocabulary {
 		$this->refresh();
 		if (!empty($this->definition->vid)) {
 			if (!static::vocabularyHasTerms($this->definition->vid)) {
+				$counter = 0;
 				foreach ($terms as $index => $term) {
+					$label = is_numeric($index) ? $term : $index;
 					$new_term = (object)array(
 						'vid' => $this->definition->vid,
-						'name' => $term,
-						'weight' => $index,
+						'name' => $label,
+						'weight' => $counter,
 					);
+					if (is_array($term)) {
+						foreach ($term as $field => $value) {
+							$new_term->$field = $value;
+						}
+					}
 					taxonomy_term_save($new_term);
+					$counter++;
 				}
 			}
 		}
