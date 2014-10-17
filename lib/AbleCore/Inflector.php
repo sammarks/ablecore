@@ -1,5 +1,7 @@
 <?php
 
+namespace AbleCore;
+
 /**
  * This file was not originally part of Able Core, but has been added
  * for simplicity and ease of deployment. It would be added via Composer,
