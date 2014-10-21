@@ -6,6 +6,7 @@ use Drupal\xautoload\FinderOperation\HookXautoloadOperation;
 
 // Require preprocessors that aren't handled by Able Core.
 require_once('preprocessors/node.inc');
+require_once('preprocessors/html_tag.inc');
 
 // Make sure ablecore helper files are loaded, even on update.php.
 ablecore_modules_installed(module_implements('ablecore'));
