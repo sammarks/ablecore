@@ -78,9 +78,9 @@ class TaxonomyTerm extends EntityExtension {
 		foreach ($flat_tree as $term) {
 			if (array_search($parent_id, $term->parents) !== false) {
 				$terms[$term->tid] = $term;
-			}
-			if ($children = static::getTermTree($flat_tree, $term->tid)) {
-				$terms[$term->tid]->children = $children;
+				if ($children = static::getTermTree($flat_tree, $term->tid)) {
+					$terms[$term->tid]->children = $children;
+				}
 			}
 		}
 		return $terms;
