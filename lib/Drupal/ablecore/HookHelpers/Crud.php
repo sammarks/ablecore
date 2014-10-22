@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\ablecore\Modules;
+namespace Drupal\ablecore\HookHelpers;
 
 abstract class Crud implements CrudInterface {
 

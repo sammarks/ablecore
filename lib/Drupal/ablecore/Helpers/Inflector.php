@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\ablecore;
+namespace Drupal\ablecore\Helpers;
 
 /**
  * This file was not originally part of Able Core, but has been added
@@ -34,27 +34,7 @@ namespace Drupal\ablecore;
  * @author  Bermi Ferrer Martinez <bermi a.t bermilabs c.om>
  * @license GNU Lesser General Public License <http://www.gnu.org/copyleft/lesser.html>
  */
-class Inflector {
-
-	/**
-	 * @var null|static
-	 */
-	static $instance = null;
-
-	/**
-	 * Get Instance
-	 *
-	 * Singleton function.
-	 *
-	 * @return static The current instance of the Inflector.
-	 */
-	public static function getInstance()
-	{
-		if (!static::$instance) {
-			static::$instance = new static();
-		}
-		return static::$instance;
-	}
+class Inflector extends Helper {
 
 	/**
 	 * Pluralizes English nouns.

@@ -34,7 +34,7 @@ function ablecore_mail($key, &$message, $params)
 
 function ablecore_mail_theme()
 {
-	return Drupal\ablecore\Modules\ThemeManager::init()
+	return Drupal\ablecore\HookHelpers\Theme::init()
 		->define('ablecore_key_value_email')
 		->fin();
 }

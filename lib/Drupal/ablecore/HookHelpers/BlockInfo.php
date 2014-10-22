@@ -7,7 +7,7 @@
  * @package Able Core (Module Helpers)
  */
 
-namespace Drupal\ablecore\Modules;
+namespace Drupal\ablecore\HookHelpers;
 
 /**
  * Block Manager
@@ -45,7 +45,7 @@ namespace Drupal\ablecore\Modules;
  * @author  Samuel Marks <sam@sammarks.me>
  * @package Able Core (Module Helpers)
  */
-class BlockManager
+class BlockInfo
 {
 
 	/**
@@ -65,7 +65,7 @@ class BlockManager
 	 * @param  int    $weight       The weight of the block. Defaults to 0.
 	 * @param  array  $extra_config Any extra configuration options for the block.
 	 *
-	 * @return BlockManager
+	 * @return BlockInfo
 	 */
 	function define($identifier, $title, $region = '', $weight = 0, $extra_config = array())
 	{
@@ -98,11 +98,11 @@ class BlockManager
 	 * Init
 	 *
 	 * Creates a new BlockManager.
-	 * @return BlockManager
+	 * @return BlockInfo
 	 */
 	public static function init()
 	{
-		return new BlockManager();
+		return new BlockInfo();
 	}
 
 	/**

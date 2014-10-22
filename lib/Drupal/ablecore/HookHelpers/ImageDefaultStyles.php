@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\ablecore\Modules;
+namespace Drupal\ablecore\HookHelpers;
 
-class ImageStyleManager {
+class ImageDefaultStyles {
 
 	protected $styles = array();
 
 	/**
 	 * Init
 	 *
-	 * @return ImageStyleManager A new instance of the ImageStyleManager.
+	 * @return ImageDefaultStyles A new instance of the ImageStyleManager.
 	 */
 	public static function init()
 	{

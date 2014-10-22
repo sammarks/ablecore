@@ -1,6 +1,6 @@
 <?php
 
-use Drupal\ablecore\Modules\PathManager;
+use Drupal\ablecore\HookHelpers\Menu;
 use Drupal\ablecore_menu\MenuPathRelationship;
 use Drupal\ablecore_menu\ListForm;
 use Drupal\ablecore_menu\EditForm;
@@ -8,15 +8,13 @@ use Drupal\ablecore_menu\DeleteForm;
 
 function ablecore_menu_menu()
 {
-	return PathManager::init()
-		->access(array('administer able core menu'))
+	return AbleCore::hook('menu')->init('administer able core menu')
 		->define('admin/config/ablecore/menu-relationships', 'admin@list', 'Menu Relationships')
 		->define('admin/config/ablecore/menu-relationships/create', 'admin@create', 'Create Relationship', array(
 			'type' => MENU_LOCAL_ACTION,
 		))
 		->define('admin/config/ablecore/menu-relationships/%/edit', 'admin@edit', 'Edit Relationship')
 		->define('admin/config/ablecore/menu-relationships/%/delete', 'admin@delete', 'Delete Relationship')
-		->fin()
 		->fin();
 }
 

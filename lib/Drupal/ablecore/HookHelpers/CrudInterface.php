@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\ablecore\Modules;
+namespace Drupal\ablecore\HookHelpers;
 
 interface CrudInterface {
 

@@ -1,6 +1,5 @@
 <?php
 
-use Drupal\ablecore\Modules\PathManager;
 use Drupal\ablecore\Internal\HookUtils;
 use Drupal\xautoload\FinderOperation\HookXautoloadOperation;
 
@@ -13,17 +12,13 @@ ablecore_modules_installed(module_implements('ablecore'));
 
 function ablecore_menu()
 {
-	$paths = PathManager::init()
-		->access(array('administer able core'))
+	return AbleCore::hook('menu')->init('administer able core')
 		->define('admin/config/ablecore', 'system_admin_menu_block_page', 'Able Core', array(
 			'file' => 'system.admin.inc',
 			'file path' => drupal_get_path('module', 'system'),
 			'description' => 'Lists administration actions for Able Core.',
 		))
-		->fin()
 		->fin();
-
-	return $paths;
 }
 
 function ablecore_theme()

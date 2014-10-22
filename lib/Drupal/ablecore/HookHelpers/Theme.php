@@ -7,7 +7,7 @@
  * @author  Samuel Marks <sam@sammarks.me>
  */
 
-namespace Drupal\ablecore\Modules;
+namespace Drupal\ablecore\HookHelpers;
 
 /**
  * Theme Manager
@@ -42,7 +42,7 @@ namespace Drupal\ablecore\Modules;
  * @package Able Core (Module Helpers)
  * @author  Samuel Marks <sam@sammarks.me>
  */
-class ThemeManager
+class Theme
 {
 
 	/**
@@ -66,11 +66,11 @@ class ThemeManager
 	 *
 	 * Creates a new ThemeManager.
 	 *
-	 * @return ThemeManager.
+	 * @return Theme.
 	 */
 	public static function init()
 	{
-		return new ThemeManager();
+		return new Theme();
 	}
 
 	/**
@@ -82,7 +82,7 @@ class ThemeManager
 	 * @param  array  $additional_configuration An array of additional configuration options.
 	 *
 	 * @throws \Exception
-	 * @return ThemeManager
+	 * @return Theme
 	 */
 	public function define($key, $additional_configuration = array())
 	{

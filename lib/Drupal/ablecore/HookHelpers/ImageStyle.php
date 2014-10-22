@@ -2,7 +2,7 @@
 /**
  * @file ImageStyle.php
  */
-namespace Drupal\ablecore\Modules;
+namespace Drupal\ablecore\HookHelpers;
 
 class ImageStyle {
 

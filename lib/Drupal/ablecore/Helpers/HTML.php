@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\ablecore;
+namespace Drupal\ablecore\Helpers;
 
-class HTML {
+class HTML extends Helper {
 
-	public static function image($source, $alt = '', $title = '', array $attributes = array(), array $options = array())
+	public function image($source, $alt = '', $title = '', array $attributes = array(), array $options = array())
 	{
 		$default_options = array(
 			'type' => 'theme',
@@ -41,10 +41,10 @@ class HTML {
 		return theme('image', $variables);
 	}
 
-	public static function absImage($source, $alt = '', $title = '', array $attributes = array(), array $options = array())
+	public function absImage($source, $alt = '', $title = '', array $attributes = array(), array $options = array())
 	{
 		$options['type'] = 'absolute';
-		return self::image($source, $alt, $title, $attributes, $options);
+		return $this->image($source, $alt, $title, $attributes, $options);
 	}
 
 } 

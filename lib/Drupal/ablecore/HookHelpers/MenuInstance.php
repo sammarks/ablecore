@@ -1,50 +1,8 @@
 <?php
 
-/**
- * A page callback (path) manager for Drupal.
- *
- * @package Able Core (Module Helpers)
- * @author  Samuel Marks <sam@sammarks.me>
- */
+namespace Drupal\ablecore\HookHelpers;
 
-namespace Drupal\ablecore\Modules;
-
-/**
- * Page Callback (Path) Manager
- *
- * A menu hook manager for Drupal.
- *
- * #### Example Usage
- *
- *     PathManager::init()->define('path/with/two/arguments', 'file@function')->fin();
- *      action_function($arg1, $arg2) { ... } in controllers/file
- *
- *      // > array(
- *      //    'title' => '',
- *      //    'description' => '',
- *      //    'page callback' => 'function',
- *      //    'access arguments' => array('access content'),
- *      //    'file' => 'file',
- *      //   )
- *
- *     PathManager::init()->define('path/with/%/in/middle', 'file@function')->fin();
- *      action_function($arg1) { ... } in controllers/file
- *
- *      // > array(
- *      //    'title' => '',
- *      //    'description' => '',
- *      //    'page callback' => 'function'
- *      //    'page arguments' => array(2),
- *      //    'access arguments' => array('access content'),
- *      //    'file' => 'file',
- *      //   )
- *
- * See [the documentation](/docs/modules/menu) for more information.
- *
- * @package Able Core (Module Helpers)
- * @author  Samuel Marks <sam@sammarks.me>
- */
-class PathManager
+class MenuInstance
 {
 
 	/**
@@ -61,7 +19,7 @@ class PathManager
 	 * The current access arguments for defined routes.
 	 * @var array
 	 */
-	private $access_arguments = null;
+	protected $access_arguments = array();
 
 	/**
 	 * Define
@@ -86,7 +44,7 @@ class PathManager
 	 * @param array  $extra_config    Any extra configuration options to add to the item.
 	 * @param array  $extra_arguments The extra arguments to add to the page arguments item.
 	 *
-	 * @return PathManager
+	 * @return self
 	 */
 	function define($path, $callback, $title, $extra_config = array(), $extra_arguments = array())
 	{
@@ -151,55 +109,61 @@ class PathManager
 	}
 
 	/**
-	 * Init
-	 *
-	 * Creates a new RouteManager
-	 *
-	 * @return PathManager
-	 */
-	public static function init()
-	{
-		return new PathManager();
-	}
-
-	/**
 	 * Access
 	 *
 	 * Sets the access arguments for chained define() calls until fin() is called.
 	 *
-	 * @param array $access_arguments The access arguments to set for all children until fin()
-	 *                                is called.
+	 * @param mixed    $access_arguments The access arguments to set for all children until fin()
+	 *                                   is called.
+	 * @param callable $routes_function  The function to be called to generate the routes for
+	 *                                   that access. A MenuInstance is passed to the function.
 	 *
-	 * @return PathManager
-	 * @throws InvalidAccessArgumentsException
+	 * @return self
 	 */
-	public function access($access_arguments)
+	public function access($access_arguments, callable $routes_function)
 	{
-		if (!is_array($access_arguments) || count($access_arguments) <= 0) {
-			throw new InvalidAccessArgumentsException('There were no access arguments passed.');
-		}
-		$this->access_arguments = $access_arguments;
+		$instance = new static();
+		$instance->setAccessArguments($access_arguments);
+		$routes_function($instance);
+		$this->generated += $instance->fin();
+
 		return $this;
 	}
 
 	/**
-	 * Finish
+	 * Sets the access arguments for the current instance from either a string
+	 * or an array of access arguments.
 	 *
-	 * Finish the generation of the route or access level.
+	 * @param mixed $access_arguments Either a single access argument or an array
+	 *                                of multiple arguments.
 	 *
-	 * @return array|PathManager The hook_menu configuration if not inside an access argument
-	 *                           level. Otherwise, the access arguments are unset and the
-	 *                           PathManager is returned.
+	 * @return $this
+	 * @throws InvalidAccessArgumentsException
+	 */
+	public function setAccessArguments($access_arguments)
+	{
+		// If we have a string value for the access arguments, make it an array.
+		if ($access_arguments && !is_array($access_arguments)) {
+			$access_arguments = array($access_arguments);
+		}
+
+		if (!is_array($access_arguments) || count($access_arguments) <= 0) {
+			throw new InvalidAccessArgumentsException('There were no access arguments passed.');
+		}
+
+		$this->access_arguments = $access_arguments;
+
+		return $this;
+	}
+
+	/**
+	 * Finish the generation of the menu callbacks.
+	 *
+	 * @return array The hook_menu configuration.
 	 */
 	public function fin()
 	{
-		// If we're inside access arguments, unset it and return this object.
-		if (is_array($this->access_arguments) && count($this->access_arguments) > 0) {
-			$this->access_arguments = null;
-			return $this;
-		} else {
-			return $this->generated;
-		}
+		return $this->generated;
 	}
 
 }

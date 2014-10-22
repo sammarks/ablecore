@@ -1,0 +1,15 @@
+{
+	"name": "sammarks/ablecore",
+	"description": "A library for Drupal developers.",
+	"minimum-stability": "beta",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Samuel Marks",
+			"email": "sam@sammarks.me"
+		}
+	],
+	"require": {
+		"florianwolters/component-util-singleton": "dev-master"
+	}
+}

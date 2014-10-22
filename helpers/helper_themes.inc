@@ -2,7 +2,7 @@
 
 function ablecore_helper_themes_theme()
 {
-	return \Drupal\ablecore\Modules\ThemeManager::init()
+	return \Drupal\ablecore\HookHelpers\Theme::init()
 		->defineFunction('columns', 'element', 'helpers/helper_themes.inc', array(
 				'variables' => array('num_columns' => 3, 'items' => array())
 		))
