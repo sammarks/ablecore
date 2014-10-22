@@ -145,6 +145,17 @@ class Menu {
 	public static function menuHasLinks($menu_name)
 	{
 		$links = menu_load_links($menu_name);
+
+		// If we only have one link in the main menu...
+		if ($menu_name == 'main_menu' && count($links) === 1) {
+			$first_link = reset($links);
+
+			// And that link is the homepage, say the menu is empty.
+			if ($first_link['link_path'] == '<front>') {
+				return false;
+			}
+		}
+
 		return (is_array($links) && count($links) > 0);
 	}
 
