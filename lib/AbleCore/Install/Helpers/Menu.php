@@ -74,9 +74,9 @@ class Menu {
 	 * Provides some default items for the menu. These items will only be added
 	 * if the menu is already empty.
 	 *
-	 * @param array $items The items to add to the menu. The key is the path for
+	 * @param array $items The items to add to the menu. The key is the title for
 	 *                     the item, and the value can either be an array of the
-	 *                     menu item settings, or a string representing the title
+	 *                     menu item settings, or a string representing the path
 	 *                     of the menu item.
 	 *
 	 * @return $this
@@ -87,19 +87,19 @@ class Menu {
 		if (!empty($existing_menu)) {
 			if (!static::menuHasLinks($this->machine_name)) {
 				$weight = 0;
-				foreach ($items as $path => $item) {
+				foreach ($items as $title => $item) {
 
 					// Create the base definition from the item if it's an array.
 					$definition = array();
 					if (is_array($item)) {
 						$definition = $item;
 					} else {
-						$definition['link_title'] = $item;
+						$definition['link_path'] = $item;
 					}
 
 					// Update the link path if we don't have one already.
-					if (!array_key_exists('link_path', $definition)) {
-						$definition['link_path'] = $path;
+					if (!array_key_exists('link_title', $definition)) {
+						$definition['link_title'] = $title;
 					}
 
 					// Then update the menu name.
