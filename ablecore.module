@@ -1,7 +1,7 @@
 <?php
 
-use AbleCore\Modules\PathManager;
-use AbleCore\Internal\HookUtils;
+use Drupal\ablecore\Modules\PathManager;
+use Drupal\ablecore\Internal\HookUtils;
 use Drupal\xautoload\FinderOperation\HookXautoloadOperation;
 
 // Require preprocessors that aren't handled by Able Core.
@@ -43,11 +43,6 @@ function ablecore_permission()
 			'description' => t('Perform administrative tasks for the Able Core module.'),
 		),
 	);
-}
-
-function ablecore_xautoload($api)
-{
-	$api->add('AbleCore\\', 'lib');
 }
 
 // Register hooks for "submodules"
@@ -107,7 +102,7 @@ function ablecore_modules_installed(array $modules)
 	// Perform any installation tasks for a module.
 	foreach ($modules as $module) {
 		if (HookUtils::isAbleCoreModule($module)) {
-			$installer = new \AbleCore\Install\ModuleInstaller($module);
+			$installer = new \Drupal\ablecore\Install\ModuleInstaller($module);
 			if ($installer->checkForTaskRunnerClass()) {
 				$installer->install();
 			}
@@ -128,7 +123,6 @@ function ablecore_ablecore() {}
  */
 function ablecore_block_view_alter(&$data, $block)
 {
-
 	// First check to see if a theme hook exists.
 	$hooks = theme_get_registry(false);
 	$candidates = array(
@@ -157,7 +151,6 @@ function ablecore_block_view_alter(&$data, $block)
 	if (is_array($data['content']) && !array_key_exists('#theme', $data['content'])) {
 		$data['content']['#theme'] = $candidate;
 	}
-
 }
 
 function ablecore_theme_registry_alter(&$registry)

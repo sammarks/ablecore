@@ -1,6 +1,6 @@
 <?php
 
-use AbleCore\Modules\PathManager;
+use Drupal\ablecore\Modules\PathManager;
 use Drupal\ablecore_menu\MenuPathRelationship;
 use Drupal\ablecore_menu\ListForm;
 use Drupal\ablecore_menu\EditForm;

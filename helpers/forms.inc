@@ -7,7 +7,7 @@
  *
  * @param string $form_id The ID of the instance to get.
  *
- * @return AbleCore\Forms\FormBase|bool FALSE if no instance was found,
+ * @return Drupal\ablecore\Forms\FormBase|bool FALSE if no instance was found,
  *                                      AbleCore\Forms\FormBase if it was.
  * @throws Exception
  */

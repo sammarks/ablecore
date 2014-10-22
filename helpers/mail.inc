@@ -1,7 +1,7 @@
 <?php
 
-use AbleCore\Mailer\MailerException;
-use AbleCore\Mailer\MailerBase;
+use Drupal\ablecore\Mailer\MailerException;
+use Drupal\ablecore\Mailer\MailerBase;
 
 function ablecore_mail($key, &$message, $params)
 {
@@ -34,7 +34,7 @@ function ablecore_mail($key, &$message, $params)
 
 function ablecore_mail_theme()
 {
-	return AbleCore\Modules\ThemeManager::init()
+	return Drupal\ablecore\Modules\ThemeManager::init()
 		->define('ablecore_key_value_email')
 		->fin();
 }
