@@ -67,7 +67,7 @@ class TaxonomyVocabulary {
 	 *
 	 * @return $this
 	 */
-	public function seed(array $terms = array())
+	public function seed(array $terms)
 	{
 		$this->refresh();
 		if (!empty($this->definition->vid)) {
