@@ -83,6 +83,10 @@ class Menu {
 	 */
 	public function seed(array $items)
 	{
+		// Clear the menu cache so that menu items added from the parent
+		// module will appear.
+		menu_cache_clear();
+
 		$existing_menu = menu_load($this->machine_name);
 		if (!empty($existing_menu)) {
 			if (!static::menuHasLinks($this->machine_name)) {
