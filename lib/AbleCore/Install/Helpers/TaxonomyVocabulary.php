@@ -72,26 +72,49 @@ class TaxonomyVocabulary {
 		$this->refresh();
 		if (!empty($this->definition->vid)) {
 			if (!static::vocabularyHasTerms($this->definition->vid)) {
-				$counter = 0;
+				$weight = 0;
 				foreach ($terms as $index => $term) {
-					$label = is_numeric($index) ? $term : $index;
-					$new_term = (object)array(
-						'vid' => $this->definition->vid,
-						'name' => $label,
-						'weight' => $counter,
-					);
-					if (is_array($term)) {
-						foreach ($term as $field => $value) {
-							$new_term->$field = $value;
-						}
-					}
-					taxonomy_term_save($new_term);
-					$counter++;
+					$this->seedTerm($index, $term, $weight);
 				}
 			}
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Seeds an individual term.
+	 *
+	 * @param string $index       The index of the term. Either a string or a number.
+	 * @param mixed  $term        The term itself. Either the name of the term or an array representing
+	 *                            additional configuration options.
+	 * @param int    $weight      The current weight to be applied to terms.
+	 * @param int    $parent_term The TID of the parent term to add to the current term.
+	 */
+	protected function seedTerm($index, $term, &$weight, $parent_term = 0)
+	{
+		$label = is_numeric($index) ? $term : $index;
+		$new_term = (object)array(
+			'vid' => $this->definition->vid,
+			'name' => $label,
+			'weight' => $weight,
+			'parent' => $parent_term,
+		);
+		if (is_array($term)) {
+			foreach ($term as $field => $value) {
+				if ($field == 'children') continue;
+				$new_term->$field = $value;
+			}
+		}
+		taxonomy_term_save($new_term);
+		$weight++;
+
+		// If the term has children, add them.
+		if ($new_term->tid && is_array($term) && array_key_exists('children', $term) && count($term['children'])) {
+			foreach ($term['children'] as $child_index => $child_term) {
+				$this->seedTerm($child_index, $child_term, $weight, $new_term->tid);
+			}
+		}
 	}
 
 	/**
