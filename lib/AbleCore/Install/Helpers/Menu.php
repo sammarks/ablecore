@@ -90,6 +90,12 @@ class Menu {
 		$existing_menu = menu_load($this->machine_name);
 		if (!empty($existing_menu)) {
 			if (!static::menuHasLinks($this->machine_name)) {
+
+				// Clear the existing menu.
+				foreach (menu_load_links($this->machine_name) as $link) {
+					menu_link_delete($link['mlid']);
+				}
+
 				$weight = 0;
 				foreach ($items as $title => $item) {
 
