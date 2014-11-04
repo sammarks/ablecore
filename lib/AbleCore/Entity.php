@@ -560,14 +560,13 @@ class Entity extends DrupalExtension {
 	{
 		$entity_info = entity_get_info($this->type);
 		if (isset($entity_info['entity keys'][$key])) {
-			if (isset($this->base->{$entity_info['entity keys'][$key]})) {
-				if ($value !== false && $value !== null) {
-					$this->base->{$entity_info['entity keys'][$key]} = $value;
-					return $value;
-				} elseif ($value === null) {
-					unset($this->base->{$entity_info['entity keys'][$key]});
-					return $value;
-				}
+			if ($value !== false && $value !== null) {
+				$this->base->{$entity_info['entity keys'][$key]} = $value;
+				return $value;
+			} elseif ($value === null) {
+				unset($this->base->{$entity_info['entity keys'][$key]});
+				return $value;
+			} elseif (isset($this->base->{$entity_info['entity keys'][$key]})) {
 				return $this->base->{$entity_info['entity keys'][$key]};
 			}
 		}
