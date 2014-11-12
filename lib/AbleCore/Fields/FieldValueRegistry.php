@@ -61,7 +61,16 @@ class FieldValueRegistry
 
 		// Make sure the field exists on the base.
 		if (!property_exists($entity, $name)) {
-			field_attach_load_revision($entity_type, array($entity_id => $entity), array('field_id' => $field_info['id']));
+			try {
+				field_attach_load_revision($entity_type,
+					array($entity_id => $entity),
+					array('field_id' => $field_info['id']));
+			} catch (\Exception $ex) {
+				// If an exception was thrown, that probably means we haven't yet saved the
+				// node, so if there is no field on the currently-loaded node object, then
+				// there won't be a field.
+				return false;
+			}
 			if (!property_exists($entity, $name)) return false;
 		}
 
