@@ -25,10 +25,11 @@ class Entity extends DrupalExtension {
 	 */
 	protected $full_loaded = false;
 
-	public function __construct($type, $definition)
+	public function __construct($type, $definition, $full_loaded = false)
 	{
 		$this->base = $definition;
 		$this->type = $type;
+		$this->full_loaded = $full_loaded;
 	}
 
 	/**
@@ -142,6 +143,19 @@ class Entity extends DrupalExtension {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Import a fully loaded entity with the specified type.
+	 *
+	 * @param string $entity_type The entity type being imported.
+	 * @param mixed  $definition  The fully-loaded definition of the entity.
+	 *
+	 * @return Entity
+	 */
+	public static function importFullWithType($entity_type, $definition)
+	{
+		return new self($entity_type, $definition, true);
 	}
 
 	/**
