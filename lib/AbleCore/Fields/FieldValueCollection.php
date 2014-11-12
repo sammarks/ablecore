@@ -10,7 +10,11 @@ class FieldValueCollection extends \ArrayObject
 		// information along.
 		if (count($this) > 0 && !property_exists($item, $this)) {
 			// We don't do a check for the property existing here because __call might handle it.
-			return reset($this)->$item;
+			$first_result = reset($this);
+			if (!is_object($first_result)) {
+				throw new \Exception('The property ' . $item . ' could not be found.');
+			}
+			return $first_result->$item;
 		} elseif (property_exists($item, $this)) {
 			return $this->$item;
 		} else {
