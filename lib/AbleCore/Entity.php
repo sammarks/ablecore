@@ -280,11 +280,9 @@ class Entity extends DrupalExtension {
 					trigger_error('The field ' . $name . ' doesn\'t exist.');
 					return false;
 				} else {
-
 					// If we don't already have the full entity object, load it and try to get the field again.
 					$this->loadFull();
 					return $this->__get($name);
-
 				}
 			}
 		} else {
@@ -561,6 +559,21 @@ class Entity extends DrupalExtension {
 	}
 
 	/**
+	 * Determines whether or not the specified field exists on the node.
+	 * This is different than using the __get magic method because this
+	 * function only looks for fields (loaded through the field API) and
+	 * it doesn't throw a warning if the field doesn't exist.
+	 *
+	 * @param string $field_name The field to attempt to load.
+	 *
+	 * @return bool Whether or not the field exists.
+	 */
+	public function fieldExists($field_name)
+	{
+		return $this->field($field_name) !== false;
+	}
+
+	/**
 	 * Key
 	 *
 	 * Internal function. Used to get or set an entity key on the loaded entity.
@@ -600,7 +613,7 @@ class Entity extends DrupalExtension {
 	{
 		$args = func_get_args();
 		array_shift($args);
-		$func_args = array_merge(array($this->type(), $this->id(), $this->base, $name), $args);
+		$func_args = array_merge(array($this->type(), $this->id(), $this->base, $name, !$this->full_loaded), $args);
 
 		return forward_static_call_array(array('\AbleCore\Fields\FieldValueRegistry', 'field'), $func_args);
 	}

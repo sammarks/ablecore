@@ -37,16 +37,17 @@ class FieldValueRegistry
 	/**
 	 * Gets the value for a field on the specified entity.
 	 *
-	 * @param string $entity_type The type of entity being loaded.
-	 * @param int    $entity_id   The ID of the entity to get the field from.
-	 * @param object $entity      The entity loaded from Drupal.
-	 * @param string $name        The name of the field.
+	 * @param string $entity_type     The type of entity being loaded.
+	 * @param int    $entity_id       The ID of the entity to get the field from.
+	 * @param object $entity          The entity loaded from Drupal.
+	 * @param string $name            The name of the field.
+	 * @param bool   $autoload_fields Whether or not to autoload fields.
 	 *
 	 * @return FieldValueCollection|bool|null False if the field wasn't found,
 	 *                                        null if the field has no values,
 	 *                                        FieldValueCollection otherwise.
 	 */
-	public static function field($entity_type, $entity_id, $entity, $name)
+	public static function field($entity_type, $entity_id, $entity, $name, $autoload_fields = true)
 	{
 		// Check to see if it's a valid field type.
 		$field_info = field_info_field($name);
@@ -83,6 +84,7 @@ class FieldValueRegistry
 
 		// Prepare the arguments.
 		$args = func_get_args();
+		array_shift($args);
 		array_shift($args);
 		array_shift($args);
 		array_shift($args);
