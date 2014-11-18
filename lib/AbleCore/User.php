@@ -25,7 +25,7 @@ class User extends EntityExtension
 	/**
 	 * Logged In
 	 *
-	 * @return Entity|bool The current logged in user.
+	 * @return User|bool The current logged in user.
 	 */
 	public static function loggedIn()
 	{
