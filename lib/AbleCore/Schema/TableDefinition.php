@@ -410,11 +410,20 @@ class TableDefinition {
 	 *
 	 * @param $name
 	 *
-	 * @return $this
+	 * @return TableColumn
 	 */
 	public function boolean($name)
 	{
 		return $this->tinyInteger($name)->defaultTo(0)->length(1);
+	}
+
+	/**
+	 * Adds 'created' and 'changed' columns to the table.
+	 */
+	public function timestamps()
+	{
+		$this->integer('created')->length(11)->defaultTo('CURRENT_TIMESTAMP');
+		$this->integer('changed')->length(11)->defaultTo('CURRENT_TIMESTAMP');
 	}
 
 }
