@@ -47,4 +47,18 @@ class HTML {
 		return self::image($source, $alt, $title, $attributes, $options);
 	}
 
+	/**
+	 * A wrapper for drupal_render to allow passing non-variable arguments (because the
+	 * regular drupal_render is pass-by-reference).
+	 *
+	 * @param array $elements The elements to render.
+	 *
+	 * @return string The rendered HTML.
+	 * @see drupal_render()
+	 */
+	public static function render($elements)
+	{
+		return drupal_render($elements);
+	}
+
 } 
