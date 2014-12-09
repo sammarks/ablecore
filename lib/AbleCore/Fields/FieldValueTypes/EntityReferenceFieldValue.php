@@ -40,7 +40,7 @@ class EntityReferenceFieldValue extends FieldValue
 		}
 
 		if (!$this->raw_entity) {
-			throw new \Exception("The {$target_type} '{$this->id}' does not exist.");
+			trigger_error("The {$target_type} '{$this->id}' does not exist.", E_USER_WARNING);
 		}
 	}
 
