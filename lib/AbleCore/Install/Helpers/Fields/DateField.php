@@ -15,17 +15,24 @@ class DateField extends Field {
 	/**
 	 * Sets the granularity of the date field.
 	 *
-	 * @param string $year
-	 * @param string $month
-	 * @param string $day
-	 * @param string $hour
-	 * @param string $minute
-	 * @param string $second
+	 * @param bool $year
+	 * @param bool $month
+	 * @param bool $day
+	 * @param bool $hour
+	 * @param bool $minute
+	 * @param bool $second
 	 *
 	 * @return $this
 	 */
-	public function setGranularity($year = 'year', $month = 'month', $day = 'day', $hour = 'hour', $minute = 'minute', $second = 'second')
+	public function setGranularity($year = false, $month = false, $day = false, $hour = false, $minute = false, $second = false)
 	{
+		$year = $year ? 'year' : false;
+		$month = $month ? 'month' : false;
+		$day = $day ? 'day' : false;
+		$hour = $hour ? 'hour' : false;
+		$minute = $minute ? 'minute' : false;
+		$second = $second ? 'second' : false;
+
 		return $this->setSetting('granularity', array(
 			'year' => $year,
 			'month' => $month,
