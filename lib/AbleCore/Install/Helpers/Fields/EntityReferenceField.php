@@ -3,6 +3,7 @@
 namespace AbleCore\Install\Helpers\Fields;
 
 use AbleCore\Install\Helpers\Field;
+use AbleCore\Install\Helpers\FieldTypes;
 
 class EntityReferenceField extends Field {
 
@@ -50,5 +51,25 @@ class EntityReferenceField extends Field {
 	public function referencesType($entity_type = 'node')
 	{
 		return $this->setSetting('target_type', $entity_type);
+	}
+
+	/**
+	 * Creates a new entity reference field.
+	 *
+	 * @param string $field_name  The name of the new field.
+	 * @param array  $bundles     The bundles the field references (must not be empty).
+	 * @param string $entity_type The type of entity the field references.
+	 *
+	 * @return $this
+	 * @throws \Exception
+	 */
+	public static function createEntityReference($field_name, array $bundles = array(), $entity_type = 'node')
+	{
+		$instance = static::create($field_name);
+		$instance->setType(FieldTypes::ENTITY_REFERENCE);
+		$instance->references($bundles);
+		$instance->referencesType($entity_type);
+
+		return $instance->save();
 	}
 }

@@ -57,7 +57,7 @@ class Field {
 	 *
 	 * @param string $field_name The name of the field to create.
 	 *
-	 * @return Field The field object, or the loaded field if it already exists.
+	 * @return static The field object, or the loaded field if it already exists.
 	 */
 	public static function create($field_name)
 	{
