@@ -80,7 +80,7 @@ class FieldInstance {
 	 * @param string $bundle      The bundle (content type).
 	 * @param string $entity_type The type of entity.
 	 *
-	 * @return FieldInstance The new field instance object.
+	 * @return static The new field instance object.
 	 */
 	public static function create(Field $field, $bundle, $entity_type = 'node')
 	{
