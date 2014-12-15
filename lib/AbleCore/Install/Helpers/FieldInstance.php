@@ -189,6 +189,12 @@ class FieldInstance {
 			'active' => true,
 			'settings' => $widget['settings'],
 		);
+
+		// Merge existing values.
+		if (!empty($this->definition['widget'])) {
+			$widget_config = array_replace_recursive($widget_config, $this->definition['widget']);
+		}
+
 		$this->definition['widget'] = $widget_config;
 
 		return $this;
