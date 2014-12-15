@@ -47,7 +47,7 @@ class FieldInstance {
 	 * @param string $bundle      The bundle (content type).
 	 * @param string $entity_type The type of entity the field is attached to.
 	 *
-	 * @return FieldInstance|bool Either the field instance object, or false.
+	 * @return static|bool Either the field instance object, or false.
 	 */
 	public static function load($field_name, $bundle, $entity_type = 'node')
 	{
@@ -147,7 +147,7 @@ class FieldInstance {
 	 *
 	 * @param int $weight The weight of the field.
 	 *
-	 * @return FieldInstance
+	 * @return $this
 	 */
 	public function setWeight($weight)
 	{
