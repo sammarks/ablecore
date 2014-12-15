@@ -89,7 +89,8 @@ class FieldInstance {
 		} else {
 			$instance = new static($field, $bundle, $entity_type);
 		}
-		return $instance->setDefaults();
+		$instance->setDefaults();
+		return $instance;
 	}
 
 	/**
