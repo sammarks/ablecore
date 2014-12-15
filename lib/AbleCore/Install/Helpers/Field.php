@@ -116,6 +116,19 @@ class Field {
 	}
 
 	/**
+	 * Sets the cardinality (or the number of items) for the field.
+	 *
+	 * @param int $cardinality The cardinality for the field.
+	 *
+	 * @return $this
+	 */
+	public function setCardinality($cardinality = 1)
+	{
+		$this->definition['cardinality'] = $cardinality;
+		return $this;
+	}
+
+	/**
 	 * Get Name
 	 * @return null|string The field name.
 	 */
