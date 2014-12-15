@@ -168,6 +168,33 @@ class FieldInstance {
 	}
 
 	/**
+	 * Sets the widget for the field instance and loads the default
+	 * values into the field instance definition.
+	 *
+	 * @param string $widget_key The name of the widget.
+	 *
+	 * @return $this
+	 * @throws \Exception
+	 */
+	public function setWidget($widget_key)
+	{
+		$widget = field_info_widget_types($widget_key);
+		if (!$widget) {
+			throw new \Exception('The widget ' . $widget_key . ' does not exist.');
+		}
+
+		$widget_config = array(
+			'type' => $widget_key,
+			'module' => $widget['module'],
+			'active' => true,
+			'settings' => $widget['settings'],
+		);
+		$this->definition['widget'] = $widget_config;
+
+		return $this;
+	}
+
+	/**
 	 * Set Widget Value
 	 *
 	 * @param mixed $key   The widget value key.
