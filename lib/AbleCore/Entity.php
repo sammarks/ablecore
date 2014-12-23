@@ -40,11 +40,11 @@ class Entity extends DrupalExtension {
 	 *
 	 * @param Entity $entity The current entity object.
 	 *
-	 * @return self The new entity object, promoted to the calling class.
+	 * @return static The new entity object, promoted to the calling class.
 	 */
 	public static function promote(Entity $entity)
 	{
-		return new self($entity->type(), $entity->base, $entity->full_loaded);
+		return new static($entity->type(), $entity->base, $entity->full_loaded);
 	}
 
 	/**
@@ -55,7 +55,7 @@ class Entity extends DrupalExtension {
 	 * @param string $entity_type The type of entity to load.
 	 * @param int    $entity_id   The ID of the entity.
 	 *
-	 * @return self|bool The loaded entity on success, or false on failure.
+	 * @return static The loaded entity on success, or false on failure.
 	 * @throws \Exception
 	 */
 	public static function loadWithType($entity_type, $entity_id)
@@ -93,7 +93,7 @@ class Entity extends DrupalExtension {
 	 * @param string $entity_type The type of entity to load.
 	 * @param string $entity_uuid The UUID of the entity to load.
 	 *
-	 * @return self|bool The loaded entity on success, else false.
+	 * @return static The loaded entity on success, else false.
 	 */
 	public static function loadWithTypeByUUID($entity_type, $entity_uuid)
 	{
@@ -116,7 +116,7 @@ class Entity extends DrupalExtension {
 	 *                            For example, for 'node/1', this value would be '1'.
 	 *                            Defaults to 1.
 	 *
-	 * @return self|bool The loaded entity or false on error.
+	 * @return static The loaded entity or false on error.
 	 */
 	public static function currentWithType($entity_type = 'node', $position = 1)
 	{
@@ -135,7 +135,7 @@ class Entity extends DrupalExtension {
 	 *
 	 * @param object $existing_entity The existing entity.
 	 *
-	 * @return self|bool Either the loaded entity, or false on failure.
+	 * @return static Either the loaded entity, or false on failure.
 	 */
 	public static function import($existing_entity)
 	{
@@ -166,7 +166,7 @@ class Entity extends DrupalExtension {
 	 * @param string $entity_type The entity type being imported.
 	 * @param mixed  $definition  The fully-loaded definition of the entity.
 	 *
-	 * @return self
+	 * @return static
 	 */
 	public static function importFullWithType($entity_type, $definition)
 	{
