@@ -2,6 +2,8 @@
 
 namespace AbleCore;
 
+use AbleCore\Fields\FieldValueTypes\EntityReferenceFieldValue;
+
 class Entity extends DrupalExtension {
 
 	/**
@@ -38,12 +40,15 @@ class Entity extends DrupalExtension {
 	 *
 	 * TODO: Remove this when #37 is fixed, as it negates the need for this function.
 	 *
-	 * @param Entity $entity The current entity object.
+	 * @param Entity|EntityReferenceFieldValue $entity The current entity object (or the field value).
 	 *
 	 * @return static The new entity object, promoted to the calling class.
 	 */
-	public static function promote(Entity $entity)
+	public static function promote($entity)
 	{
+		if ($entity instanceof EntityReferenceFieldValue) {
+			$entity = $entity->raw_entity;
+		}
 		return new static($entity->type(), $entity->base, $entity->full_loaded);
 	}
 
