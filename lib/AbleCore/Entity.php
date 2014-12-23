@@ -33,6 +33,21 @@ class Entity extends DrupalExtension {
 	}
 
 	/**
+	 * Promotes an entity to the current subclass (Node, User, etc). This allows
+	 * the use of new subclasses.
+	 *
+	 * TODO: Remove this when #37 is fixed, as it negates the need for this function.
+	 *
+	 * @param Entity $entity The current entity object.
+	 *
+	 * @return self The new entity object, promoted to the calling class.
+	 */
+	public static function promote(Entity $entity)
+	{
+		return new self($entity->type(), $entity->base, $entity->full_loaded);
+	}
+
+	/**
 	 * Load (with type)
 	 *
 	 * Loads basic entity information from the database.
