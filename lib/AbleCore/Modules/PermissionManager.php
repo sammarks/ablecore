@@ -69,6 +69,16 @@ class PermissionManager {
 	}
 
 	/**
+	 * Finish the generation of the permission information.
+	 *
+	 * @return array
+	 */
+	public function fin()
+	{
+		return $this->generated;
+	}
+
+	/**
 	 * Gets the primary permission name for the specified module.
 	 *
 	 * @param string $module_name The module to get the primary administrative name for.
