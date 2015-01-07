@@ -175,7 +175,7 @@ class Entity extends DrupalExtension {
 	 */
 	public static function importFullWithType($entity_type, $definition)
 	{
-		return new self($entity_type, $definition, true);
+		return new static($entity_type, $definition, true);
 	}
 
 	/**
