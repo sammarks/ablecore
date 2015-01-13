@@ -238,6 +238,8 @@ class Menu
 			} else {
 				$output['#theme_wrappers'] = $this->menu_theme;
 			}
+		} elseif ($this->menu_theme === null) {
+			unset($output['#theme_wrappers']);
 		}
 
 		$attributes = array();
@@ -576,7 +578,9 @@ class Menu
 	 *
 	 * Sets the theme used when rendering the entire menu.
 	 *
-	 * @param string $theme The name of the theme to use.
+	 * @param string $theme The name of the theme to use. Set this
+	 *                      to null to disable the theme wrapper
+	 *                      entirely.
 	 *
 	 * @return $this
 	 */
