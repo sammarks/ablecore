@@ -49,9 +49,14 @@ class FieldValueRegistry
 	 */
 	public static function field($entity_type, $entity_id, $entity, $name, $autoload_fields = true)
 	{
-		// Check to see if it's a valid field type.
+		// Get the field's information.
 		$field_info = field_info_field($name);
+		list(, , $bundle) = entity_extract_ids($entity_type, $entity);
+		$field_instance_info = field_info_instance($entity_type, $name, $bundle);
+
+		// Make sure the information is valid
 		if ($field_info === null) return false;
+		if ($field_instance_info === null) return false;
 
 		// Get the type for the field.
 		$type = $field_info['type'];
@@ -70,7 +75,7 @@ class FieldValueRegistry
 			try {
 				field_attach_load_revision($entity_type,
 					array($entity_id => $entity),
-					array('field_id' => $field_info['id']));
+					array('field_id' => $field_instance_info['field_id']));
 			} catch (\Exception $ex) {
 				// If an exception was thrown, that probably means we haven't yet saved the
 				// node, so if there is no field on the currently-loaded node object, then
