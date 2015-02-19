@@ -13,6 +13,10 @@ ablecore_modules_installed(module_implements('ablecore'));
 
 function ablecore_menu()
 {
+	// Make sure other modules that run on update.php and include Able Core included
+	// helpers in their hook_menu() can run.
+	ablecore_custom_theme();
+
 	$paths = PathManager::init()
 		->access(array('administer able core'))
 		->define('admin/config/ablecore', 'system_admin_menu_block_page', 'Able Core', array(

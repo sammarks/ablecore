@@ -4,3 +4,15 @@ if (function_exists('xautoload_custom_theme')) {
 	// Make sure xautoload is called, even on update.php
 	xautoload_custom_theme();
 }
+
+function ablecore_install()
+{
+	// Set the weight to a much lower value so that hook_menu() is run before other modules.
+	db_query("UPDATE {system} SET weight = -89 WHERE name = 'ablecore' AND type = 'module'");
+}
+
+function ablecore_update_7000()
+{
+	// Set the weight to a much lower value so that hook_menu() is run before other modules.
+	db_query("UPDATE {system} SET weight = -89 WHERE name = 'ablecore' AND type = 'module'");
+}
