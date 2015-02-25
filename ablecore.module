@@ -82,13 +82,8 @@ function ablecore_custom_theme()
 	}
 	$first_run = false;
 
-	// Reset the ablecore module includes.
-	module_implements('ablecore', false, true);
-	$ablecore_modules = HookUtils::getAbleCoreModules();
-	foreach ($ablecore_modules as $module) {
-		HookUtils::includeDirectory($module, 'helpers');
-		HookUtils::includeDirectory($module, 'hooks');
-	}
+	// Call the main loader function.
+	ablecore_modules_installed(module_implements('ablecore'));
 }
 
 /**
