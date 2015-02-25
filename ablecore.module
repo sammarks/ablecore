@@ -15,7 +15,7 @@ function ablecore_menu()
 {
 	// Make sure other modules that run on update.php and include Able Core included
 	// helpers in their hook_menu() can run.
-	ablecore_custom_theme();
+	ablecore_modules_installed(module_implements('ablecore'));
 
 	$paths = PathManager::init()
 		->access(array('administer able core'))
@@ -32,6 +32,9 @@ function ablecore_menu()
 
 function ablecore_theme()
 {
+	// Run the initialization logic.
+	ablecore_modules_installed(module_implements('ablecore'));
+
 	$themes = array();
 	$themes = array_merge($themes, ablecore_menu_hooks_theme());
 	$themes = array_merge($themes, ablecore_mail_theme());
