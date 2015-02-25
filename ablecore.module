@@ -8,9 +8,6 @@ use Drupal\xautoload\FinderOperation\HookXautoloadOperation;
 require_once('preprocessors/node.inc');
 require_once('preprocessors/html_tag.inc');
 
-// Make sure ablecore helper files are loaded, even on update.php.
-ablecore_modules_installed(module_implements('ablecore'));
-
 function ablecore_menu()
 {
 	// Make sure other modules that run on update.php and include Able Core included
@@ -93,16 +90,6 @@ function ablecore_modules_installed(array $modules)
 {
 	// We don't need to handle this if no modules were actually installed...
 	if (count($modules) <= 0) return;
-
-	// Trigger invocation of hook_xautoload() to catch any hooks.
-	$operation = new HookXautoloadOperation();
-	xautoload()->proxyFinder->onFinderInit($operation);
-
-	// Register the Able Core namespace if it is in the installed list.
-	if (in_array('ablecore', $modules)) {
-		xautoload()->finder->registerNamespaceRoot('AbleCore\\',
-			DRUPAL_ROOT . '/' . drupal_get_path('module', 'ablecore') . '/lib');
-	}
 
 	$ablecore_modules = HookUtils::getAbleCoreModules();
 	foreach ($modules as $module) {

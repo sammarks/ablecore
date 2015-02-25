@@ -1,7 +1,7 @@
 <?php
 	
 if (function_exists('xautoload_custom_theme')) {
-	// Make sure xautoload is called, even on update.php
+	// Make sure xautoload is called, even on update.php - This is still relevant in 5.1
 	xautoload_custom_theme();
 }
 
