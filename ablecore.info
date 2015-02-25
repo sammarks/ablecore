@@ -2,4 +2,5 @@ name = "Able Core"
 description = "A library for Drupal developers. Provides several convenience utilities for developers."
 core = 7.x
 package = "Able Core"
+dependencies[] = xautoload
 dependencies[] = menu

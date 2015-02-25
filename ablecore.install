@@ -1,4 +1,9 @@
 <?php
+	
+if (function_exists('xautoload_custom_theme')) {
+	// Make sure xautoload is called, even on update.php
+	xautoload_custom_theme();
+}
 
 function ablecore_install()
 {

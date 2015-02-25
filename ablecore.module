@@ -52,12 +52,43 @@ function ablecore_permission()
 	);
 }
 
+function ablecore_xautoload($api)
+{
+	$api->add('AbleCore\\', 'lib');
+}
+
 // Register hooks for "submodules"
 function ablecore_forms($form_id, $args)
 {
 	$result = array();
 	$result = array_merge($result, ablecore_forms_forms($form_id, $args));
 	return $result;
+}
+
+function ablecore_init()
+{
+	ablecore_custom_theme();
+}
+
+/**
+ * Implements hook_custom_theme()
+ */
+function ablecore_custom_theme()
+{
+	// Make sure this only runs once (taken from xautoload).
+	static $first_run = true;
+	if (!$first_run) {
+		return;
+	}
+	$first_run = false;
+
+	// Reset the ablecore module includes.
+	module_implements('ablecore', false, true);
+	$ablecore_modules = HookUtils::getAbleCoreModules();
+	foreach ($ablecore_modules as $module) {
+		HookUtils::includeDirectory($module, 'helpers');
+		HookUtils::includeDirectory($module, 'hooks');
+	}
 }
 
 /**
@@ -68,10 +99,14 @@ function ablecore_modules_installed(array $modules)
 	// We don't need to handle this if no modules were actually installed...
 	if (count($modules) <= 0) return;
 
-	// Manually include all ablecore library files because xautoload is useless
-	// when you try to use something other than the Drupal\ namespaces.
-	foreach (file_scan_directory(DRUPAL_ROOT . '/' . drupal_get_path('module', 'ablecore') . '/lib/AbleCore', '/(.*)\.php/') as $file) {
-		require_once $file->uri;
+	// Trigger invocation of hook_xautoload() to catch any hooks.
+	$operation = new HookXautoloadOperation();
+	xautoload()->proxyFinder->onFinderInit($operation);
+
+	// Register the Able Core namespace if it is in the installed list.
+	if (in_array('ablecore', $modules)) {
+		xautoload()->finder->registerNamespaceRoot('AbleCore\\',
+			DRUPAL_ROOT . '/' . drupal_get_path('module', 'ablecore') . '/lib');
 	}
 
 	$ablecore_modules = HookUtils::getAbleCoreModules();
