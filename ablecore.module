@@ -12,7 +12,7 @@ function ablecore_menu()
 {
 	// Make sure other modules that run on update.php and include Able Core included
 	// helpers in their hook_menu() can run.
-	ablecore_modules_installed(module_implements('ablecore'));
+	ablecore_modules_installed(module_implements('ablecore'), false);
 
 	$paths = PathManager::init()
 		->access(array('administer able core'))
@@ -30,7 +30,7 @@ function ablecore_menu()
 function ablecore_theme()
 {
 	// Run the initialization logic.
-	ablecore_modules_installed(module_implements('ablecore'));
+	ablecore_modules_installed(module_implements('ablecore'), false);
 
 	$themes = array();
 	$themes = array_merge($themes, ablecore_menu_hooks_theme());
@@ -80,13 +80,13 @@ function ablecore_custom_theme()
 	$first_run = false;
 
 	// Call the main loader function.
-	ablecore_modules_installed(module_implements('ablecore'));
+	ablecore_modules_installed(module_implements('ablecore'), false);
 }
 
 /**
  * Implements hook_modules_installed()
  */
-function ablecore_modules_installed(array $modules)
+function ablecore_modules_installed(array $modules, $install = true)
 {
 	// We don't need to handle this if no modules were actually installed...
 	if (count($modules) <= 0) return;
@@ -100,11 +100,13 @@ function ablecore_modules_installed(array $modules)
 	}
 
 	// Perform any installation tasks for a module.
-	foreach ($modules as $module) {
-		if (HookUtils::isAbleCoreModule($module)) {
-			$installer = new \AbleCore\Install\ModuleInstaller($module);
-			if ($installer->checkForTaskRunnerClass()) {
-				$installer->install();
+	if ($install) {
+		foreach ($modules as $module) {
+			if (HookUtils::isAbleCoreModule($module)) {
+				$installer = new \AbleCore\Install\ModuleInstaller($module);
+				if ($installer->checkForTaskRunnerClass()) {
+					$installer->install();
+				}
 			}
 		}
 	}
