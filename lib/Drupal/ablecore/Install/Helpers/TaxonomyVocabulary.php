@@ -59,6 +59,19 @@ class TaxonomyVocabulary {
 	}
 
 	/**
+	 * Sets the description of the taxonomy vocabulary.
+	 *
+	 * @param string $description The description of the vocabulary.
+	 *
+	 * @return $this
+	 */
+	public function setDescription($description)
+	{
+		$this->definition->description = $description;
+		return $this;
+	}
+
+	/**
 	 * Seed
 	 *
 	 * Provide some default terms for the vocabulary.

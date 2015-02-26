@@ -3,6 +3,6 @@ description = "A library for Drupal developers. Provides several convenience uti
 core = 7.x
 package = "Able Core"
 
-dependencies[] = xautoload
+dependencies[] = xautoload (>= 7.x-5.1)
 dependencies[] = menu
 dependencies[] = composer_manager

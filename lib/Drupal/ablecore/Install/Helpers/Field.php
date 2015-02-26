@@ -57,7 +57,7 @@ class Field {
 	 *
 	 * @param string $field_name The name of the field to create.
 	 *
-	 * @return Field The field object, or the loaded field if it already exists.
+	 * @return static The field object, or the loaded field if it already exists.
 	 */
 	public static function create($field_name)
 	{
@@ -112,6 +112,19 @@ class Field {
 		}
 		$this->definition['settings'][$key] = $value;
 
+		return $this;
+	}
+
+	/**
+	 * Sets the cardinality (or the number of items) for the field.
+	 *
+	 * @param int $cardinality The cardinality for the field.
+	 *
+	 * @return $this
+	 */
+	public function setCardinality($cardinality = 1)
+	{
+		$this->definition['cardinality'] = $cardinality;
 		return $this;
 	}
 

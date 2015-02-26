@@ -78,9 +78,12 @@ class Core extends FieldValueHandler
 
 	public static function longText($type, $value, $name)
 	{
-		if (!self::checkFieldValue($value, 'safe_value'))
+		if (self::checkFieldValue($value, 'safe_value')) {
+			return new LongTextFieldValue($value, $value['safe_value'], $type);
+		} elseif (self::checkFieldValue($value, 'value') && self::checkFieldValue($value, 'format')) {
+			return new LongTextFieldValue($value, check_markup($value['value'], $value['format']), $type);
+		} else {
 			return null;
-
-		return new LongTextFieldValue($value, $value['safe_value'], $type);
+		}
 	}
 }

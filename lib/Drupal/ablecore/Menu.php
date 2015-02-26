@@ -123,6 +123,16 @@ class Menu
 	private $menu_theme = '';
 
 	/**
+	 * Menu Output Post Alter
+	 *
+	 * An array of callbacks to allow to alter the final output
+	 * of the menu before passing it to Drupal's render() function.
+	 *
+	 * @var array
+	 */
+	private $menu_output_post_alter = array();
+
+	/**
 	 * Constructor
 	 *
 	 * Creates a new Menu class. This will throw an
@@ -228,6 +238,8 @@ class Menu
 			} else {
 				$output['#theme_wrappers'] = $this->menu_theme;
 			}
+		} elseif ($this->menu_theme === null) {
+			unset($output['#theme_wrappers']);
 		}
 
 		$attributes = array();
@@ -243,6 +255,14 @@ class Menu
 		}
 		if (count($attributes) > 0) {
 			$output['#attributes'] = $attributes;
+		}
+
+		// Call any alter functions so they have a chance to fiddle with the output.
+		usort($this->menu_output_post_alter, function($a, $b) {
+			return $a['weight'] - $b['weight'];
+		});
+		foreach ($this->menu_output_post_alter as $callback_item) {
+			call_user_func_array($callback_item['callback'], array(&$output));
 		}
 
 		return render($output);
@@ -558,7 +578,9 @@ class Menu
 	 *
 	 * Sets the theme used when rendering the entire menu.
 	 *
-	 * @param string $theme The name of the theme to use.
+	 * @param string $theme The name of the theme to use. Set this
+	 *                      to null to disable the theme wrapper
+	 *                      entirely.
 	 *
 	 * @return $this
 	 */
@@ -580,6 +602,37 @@ class Menu
 	public function set_link_theme($theme)
 	{
 		$this->link_theme = $theme;
+		return $this;
+	}
+
+	/**
+	 * Adds a post-alter callback to the menu. This callback is called
+	 * right before the final $output is passed to Drupal's render()
+	 * function when rendering the menu. The function definition looks
+	 * something like this:
+	 *
+	 * callback(&$output)
+	 *
+	 * The output is passed as a reference to the callback for modification.
+	 *
+	 * @param callable $callback The callback to be called.
+	 * @param int      $weight   The weight of the callback. Defaults to 0.
+	 *
+	 * @return $this
+	 */
+	public function add_post_alter_callback(callable $callback, $weight = 0)
+	{
+		// Make sure the callback doesn't already exist.
+		foreach ($this->menu_output_post_alter as $item) {
+			if ($item['callback'] == $callback) {
+				return $this;
+			}
+		}
+
+		$this->menu_output_post_alter[] = array(
+			'weight' => $weight,
+			'callback' => $callback,
+		);
 		return $this;
 	}
 

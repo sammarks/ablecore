@@ -1,6 +1,31 @@
 <?php
 	
 if (function_exists('xautoload_custom_theme')) {
-	// Make sure xautoload is called, even on update.php
+	// Make sure xautoload is called, even on update.php - This is still relevant in 5.1
 	xautoload_custom_theme();
+}
+
+function ablecore_install()
+{
+	// Set the weight to a much lower value so that hook_menu() is run before other modules.
+	// Also set the bootstrap status to 1.
+	db_query("UPDATE {system} SET weight = -89, bootstrap = 1 WHERE name = 'ablecore' AND type = 'module'");
+}
+
+/**
+ * Update the weight of Able Core so that it runs right after xautoload.
+ */
+function ablecore_update_7000()
+{
+	// Set the weight to a much lower value so that hook_menu() is run before other modules.
+	db_query("UPDATE {system} SET weight = -89 WHERE name = 'ablecore' AND type = 'module'");
+}
+
+/**
+ * Mark Able Core as a bootstrap module so it runs during the Bootstrap phase.
+ */
+function ablecore_update_7001()
+{
+	// Set the bootstrap status to 1.
+	db_query("UPDATE {system} SET bootstrap = 1 WHERE name = 'ablecore' AND type = 'module'");
 }

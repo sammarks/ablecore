@@ -49,6 +49,19 @@ abstract class EntityExtension extends Entity implements EntityExtensionInterfac
 	}
 
 	/**
+	 * Imports a fully-loaded entity into the wrapper.
+	 *
+	 * @param mixed $definition The definition of the fully-loaded entity.
+	 *
+	 * @return EntityExtension
+	 * @throws \Exception
+	 */
+	public static function importFull($definition)
+	{
+		return static::importFullWithType(static::getCurrentEntityType(), $definition);
+	}
+
+	/**
 	 * Current (with type)
 	 *
 	 * Gets the entity representing the current page.

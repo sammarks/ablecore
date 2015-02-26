@@ -2,6 +2,8 @@
 
 namespace Drupal\ablecore;
 
+use AbleCore\Fields\FieldValueTypes\EntityReferenceFieldValue;
+
 class Entity extends DrupalExtension {
 
 	/**
@@ -25,10 +27,29 @@ class Entity extends DrupalExtension {
 	 */
 	protected $full_loaded = false;
 
-	public function __construct($type, $definition)
+	public function __construct($type, $definition, $full_loaded = false)
 	{
 		$this->base = $definition;
 		$this->type = $type;
+		$this->full_loaded = $full_loaded;
+	}
+
+	/**
+	 * Promotes an entity to the current subclass (Node, User, etc). This allows
+	 * the use of new subclasses.
+	 *
+	 * TODO: Remove this when #37 is fixed, as it negates the need for this function.
+	 *
+	 * @param Entity|EntityReferenceFieldValue $entity The current entity object (or the field value).
+	 *
+	 * @return static The new entity object, promoted to the calling class.
+	 */
+	public static function promote($entity)
+	{
+		if ($entity instanceof EntityReferenceFieldValue) {
+			$entity = $entity->raw_entity;
+		}
+		return new static($entity->type(), $entity->base, $entity->full_loaded);
 	}
 
 	/**
@@ -39,7 +60,7 @@ class Entity extends DrupalExtension {
 	 * @param string $entity_type The type of entity to load.
 	 * @param int    $entity_id   The ID of the entity.
 	 *
-	 * @return Entity|bool The loaded entity on success, or false on failure.
+	 * @return static The loaded entity on success, or false on failure.
 	 * @throws \Exception
 	 */
 	public static function loadWithType($entity_type, $entity_id)
@@ -77,7 +98,7 @@ class Entity extends DrupalExtension {
 	 * @param string $entity_type The type of entity to load.
 	 * @param string $entity_uuid The UUID of the entity to load.
 	 *
-	 * @return Entity|bool The loaded entity on success, else false.
+	 * @return static The loaded entity on success, else false.
 	 */
 	public static function loadWithTypeByUUID($entity_type, $entity_uuid)
 	{
@@ -100,7 +121,7 @@ class Entity extends DrupalExtension {
 	 *                            For example, for 'node/1', this value would be '1'.
 	 *                            Defaults to 1.
 	 *
-	 * @return Entity|bool The loaded entity or false on error.
+	 * @return static The loaded entity or false on error.
 	 */
 	public static function currentWithType($entity_type = 'node', $position = 1)
 	{
@@ -119,7 +140,7 @@ class Entity extends DrupalExtension {
 	 *
 	 * @param object $existing_entity The existing entity.
 	 *
-	 * @return Entity|bool Either the loaded entity, or false on failure.
+	 * @return static Either the loaded entity, or false on failure.
 	 */
 	public static function import($existing_entity)
 	{
@@ -142,6 +163,19 @@ class Entity extends DrupalExtension {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Import a fully loaded entity with the specified type.
+	 *
+	 * @param string $entity_type The entity type being imported.
+	 * @param mixed  $definition  The fully-loaded definition of the entity.
+	 *
+	 * @return static
+	 */
+	public static function importFullWithType($entity_type, $definition)
+	{
+		return new static($entity_type, $definition, true);
 	}
 
 	/**
@@ -263,14 +297,11 @@ class Entity extends DrupalExtension {
 				return parent::__get($name);
 			} catch (\Exception $ex) {
 				if ($this->full_loaded) {
-					trigger_error('The field ' . $name . ' doesn\'t exist.');
 					return false;
 				} else {
-
 					// If we don't already have the full entity object, load it and try to get the field again.
 					$this->loadFull();
 					return $this->__get($name);
-
 				}
 			}
 		} else {
@@ -547,6 +578,21 @@ class Entity extends DrupalExtension {
 	}
 
 	/**
+	 * Determines whether or not the specified field exists on the node.
+	 * This is different than using the __get magic method because this
+	 * function only looks for fields (loaded through the field API) and
+	 * it doesn't throw a warning if the field doesn't exist.
+	 *
+	 * @param string $field_name The field to attempt to load.
+	 *
+	 * @return bool Whether or not the field exists.
+	 */
+	public function fieldExists($field_name)
+	{
+		return $this->field($field_name) !== false;
+	}
+
+	/**
 	 * Key
 	 *
 	 * Internal function. Used to get or set an entity key on the loaded entity.
@@ -586,7 +632,7 @@ class Entity extends DrupalExtension {
 	{
 		$args = func_get_args();
 		array_shift($args);
-		$func_args = array_merge(array($this->type(), $this->id(), $this->base, $name), $args);
+		$func_args = array_merge(array($this->type(), $this->id(), $this->base, $name, !$this->full_loaded), $args);
 
 		return forward_static_call_array(array('\AbleCore\Fields\FieldValueRegistry', 'field'), $func_args);
 	}

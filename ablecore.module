@@ -1,17 +1,17 @@
 <?php
 
 use Drupal\ablecore\Internal\HookUtils;
-use Drupal\xautoload\FinderOperation\HookXautoloadOperation;
 
 // Require preprocessors that aren't handled by Able Core.
 require_once('preprocessors/node.inc');
 require_once('preprocessors/html_tag.inc');
 
-// Make sure ablecore helper files are loaded, even on update.php.
-ablecore_modules_installed(module_implements('ablecore'));
-
 function ablecore_menu()
 {
+	// Make sure other modules that run on update.php and include Able Core included
+	// helpers in their hook_menu() can run.
+	ablecore_modules_installed(module_implements('ablecore'), false);
+
 	return AbleCore::hook('menu')->init('administer able core')
 		->define('admin/config/ablecore', 'system_admin_menu_block_page', 'Able Core', array(
 			'file' => 'system.admin.inc',
@@ -23,6 +23,9 @@ function ablecore_menu()
 
 function ablecore_theme()
 {
+	// Run the initialization logic.
+	ablecore_modules_installed(module_implements('ablecore'), false);
+
 	$themes = array();
 	$themes = array_merge($themes, ablecore_menu_hooks_theme());
 	$themes = array_merge($themes, ablecore_mail_theme());
@@ -48,10 +51,19 @@ function ablecore_forms($form_id, $args)
 	return $result;
 }
 
+/**
+ * Implements hook_init()
+ */
 function ablecore_init()
 {
 	ablecore_custom_theme();
 }
+
+/**
+ * Implements hook_boot(). To let Drupal know we want the module to run during the
+ * bootstrap phase.
+ */
+function ablecore_boot() {}
 
 /**
  * Implements hook_custom_theme()
@@ -65,26 +77,17 @@ function ablecore_custom_theme()
 	}
 	$first_run = false;
 
-	// Reset the ablecore module includes.
-	module_implements('ablecore', false, true);
-	$ablecore_modules = HookUtils::getAbleCoreModules();
-	foreach ($ablecore_modules as $module) {
-		HookUtils::includeDirectory($module, 'helpers');
-		HookUtils::includeDirectory($module, 'hooks');
-	}
+	// Call the main loader function.
+	ablecore_modules_installed(module_implements('ablecore'), false);
 }
 
 /**
  * Implements hook_modules_installed()
  */
-function ablecore_modules_installed(array $modules)
+function ablecore_modules_installed(array $modules, $install = true)
 {
 	// We don't need to handle this if no modules were actually installed...
 	if (count($modules) <= 0) return;
-
-	// Trigger invocation of hook_xautoload() to catch any hooks.
-	$operation = new HookXautoloadOperation();
-	xautoload()->proxyFinder->onFinderInit($operation);
 
 	$ablecore_modules = HookUtils::getAbleCoreModules();
 	foreach ($modules as $module) {
@@ -95,11 +98,12 @@ function ablecore_modules_installed(array $modules)
 	}
 
 	// Perform any installation tasks for a module.
-	foreach ($modules as $module) {
-		if (HookUtils::isAbleCoreModule($module)) {
-			$installer = new \Drupal\ablecore\Install\ModuleInstaller($module);
-			if ($installer->checkForTaskRunnerClass()) {
-				$installer->install();
+	if ($install) {
+		foreach ($modules as $module) {
+			if (HookUtils::isAbleCoreModule($module)) {
+				$installer = new \Drupal\ablecore\Install\ModuleInstaller($module);				if ($installer->checkForTaskRunnerClass()) {
+					$installer->install();
+				}
 			}
 		}
 	}

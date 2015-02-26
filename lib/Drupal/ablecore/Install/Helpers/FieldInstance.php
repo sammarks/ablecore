@@ -47,7 +47,7 @@ class FieldInstance {
 	 * @param string $bundle      The bundle (content type).
 	 * @param string $entity_type The type of entity the field is attached to.
 	 *
-	 * @return FieldInstance|bool Either the field instance object, or false.
+	 * @return static|bool Either the field instance object, or false.
 	 */
 	public static function load($field_name, $bundle, $entity_type = 'node')
 	{
@@ -80,7 +80,7 @@ class FieldInstance {
 	 * @param string $bundle      The bundle (content type).
 	 * @param string $entity_type The type of entity.
 	 *
-	 * @return FieldInstance The new field instance object.
+	 * @return static The new field instance object.
 	 */
 	public static function create(Field $field, $bundle, $entity_type = 'node')
 	{
@@ -89,7 +89,8 @@ class FieldInstance {
 		} else {
 			$instance = new static($field, $bundle, $entity_type);
 		}
-		return $instance->setDefaults();
+		$instance->setDefaults();
+		return $instance;
 	}
 
 	/**
@@ -147,7 +148,7 @@ class FieldInstance {
 	 *
 	 * @param int $weight The weight of the field.
 	 *
-	 * @return FieldInstance
+	 * @return $this
 	 */
 	public function setWeight($weight)
 	{
@@ -164,6 +165,39 @@ class FieldInstance {
 	public function setDefaultValue($default_value)
 	{
 		$this->definition['default_value'] = $default_value;
+		return $this;
+	}
+
+	/**
+	 * Sets the widget for the field instance and loads the default
+	 * values into the field instance definition.
+	 *
+	 * @param string $widget_key The name of the widget.
+	 *
+	 * @return $this
+	 * @throws \Exception
+	 */
+	public function setWidget($widget_key)
+	{
+		$widget = field_info_widget_types($widget_key);
+		if (!$widget) {
+			throw new \Exception('The widget ' . $widget_key . ' does not exist.');
+		}
+
+		$widget_config = array(
+			'type' => $widget_key,
+			'module' => $widget['module'],
+			'active' => true,
+			'settings' => $widget['settings'],
+		);
+
+		// Merge existing values.
+		if (!empty($this->definition['widget'])) {
+			$widget_config = array_replace_recursive($widget_config, $this->definition['widget']);
+		}
+
+		$this->definition['widget'] = $widget_config;
+
 		return $this;
 	}
 

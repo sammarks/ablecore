@@ -10,5 +10,5 @@ function ablecore_preprocess_node(&$variables)
 	}
 
 	// Add the Able Core node to every node template.
-	$variables['ac_node'] = Drupal\ablecore\Node::import($variables['node']);
+	$variables['ac_node'] = Drupal\ablecore\Node::importFull($variables['node']);
 }

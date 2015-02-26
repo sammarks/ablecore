@@ -37,20 +37,26 @@ class FieldValueRegistry
 	/**
 	 * Gets the value for a field on the specified entity.
 	 *
-	 * @param string $entity_type The type of entity being loaded.
-	 * @param int    $entity_id   The ID of the entity to get the field from.
-	 * @param object $entity      The entity loaded from Drupal.
-	 * @param string $name        The name of the field.
+	 * @param string $entity_type     The type of entity being loaded.
+	 * @param int    $entity_id       The ID of the entity to get the field from.
+	 * @param object $entity          The entity loaded from Drupal.
+	 * @param string $name            The name of the field.
+	 * @param bool   $autoload_fields Whether or not to autoload fields.
 	 *
 	 * @return FieldValueCollection|bool|null False if the field wasn't found,
 	 *                                        null if the field has no values,
 	 *                                        FieldValueCollection otherwise.
 	 */
-	public static function field($entity_type, $entity_id, $entity, $name)
+	public static function field($entity_type, $entity_id, $entity, $name, $autoload_fields = true)
 	{
-		// Check to see if it's a valid field type.
+		// Get the field's information.
 		$field_info = field_info_field($name);
+		list(, , $bundle) = entity_extract_ids($entity_type, $entity);
+		$field_instance_info = field_info_instance($entity_type, $name, $bundle);
+
+		// Make sure the information is valid
 		if ($field_info === null) return false;
+		if ($field_instance_info === null) return false;
 
 		// Get the type for the field.
 		$type = $field_info['type'];
@@ -61,8 +67,23 @@ class FieldValueRegistry
 
 		// Make sure the field exists on the base.
 		if (!property_exists($entity, $name)) {
-			field_attach_load_revision($entity_type, array($entity_id => $entity), array('field_id' => $field_info['id']));
+
+			// If they elected to not autoload fields, return false indicating the field
+			// does not exist.
+			if ($autoload_fields === false) return false;
+
+			try {
+				field_attach_load_revision($entity_type,
+					array($entity_id => $entity),
+					array('field_id' => $field_instance_info['field_id']));
+			} catch (\Exception $ex) {
+				// If an exception was thrown, that probably means we haven't yet saved the
+				// node, so if there is no field on the currently-loaded node object, then
+				// there won't be a field.
+				return false;
+			}
 			if (!property_exists($entity, $name)) return false;
+
 		}
 
 		// Get the items for the field.
@@ -74,6 +95,7 @@ class FieldValueRegistry
 
 		// Prepare the arguments.
 		$args = func_get_args();
+		array_shift($args);
 		array_shift($args);
 		array_shift($args);
 		array_shift($args);

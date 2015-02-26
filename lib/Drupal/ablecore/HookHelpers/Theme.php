@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Manages MVC Views.
+ * Manages theme hooks.
  *
  * @package Able Core (Module Helpers)
  * @author  Samuel Marks <sam@sammarks.me>
