@@ -112,6 +112,28 @@ class Entity extends DrupalExtension {
 	}
 
 	/**
+	 * Determines whether or not an entity exists with the specified type.
+	 *
+	 * @param string $entity_type The type of entity.
+	 * @param mixed  $identifier  Either the ID or UUID of the entity.
+	 *
+	 * @return bool
+	 */
+	public static function existsWithType($entity_type, $identifier)
+	{
+		$id_type = is_numeric($identifier) || !module_exists('uuid') ? 'id' : 'uuid';
+		$info = entity_get_info($entity_type);
+		if (!$info) return false;
+
+		$count = db_select($info['base table'], 'e')
+			->condition($info['entity keys'][$id_type], $identifier)
+			->countQuery()
+			->execute()
+			->fetchField();
+		return $count > 0;
+	}
+
+	/**
 	 * Current (with type)
 	 *
 	 * Gets the entity representing the current page.

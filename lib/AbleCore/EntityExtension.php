@@ -49,6 +49,19 @@ abstract class EntityExtension extends Entity implements EntityExtensionInterfac
 	}
 
 	/**
+	 * Determines whether or not an entity exists with the specified type.
+	 *
+	 * @param string $identifier Either the ID or UUID of the entity.
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public static function exists($identifier)
+	{
+		return static::existsWithType(static::getCurrentEntityType(), $identifier);
+	}
+
+	/**
 	 * Imports a fully-loaded entity into the wrapper.
 	 *
 	 * @param mixed $definition The definition of the fully-loaded entity.
