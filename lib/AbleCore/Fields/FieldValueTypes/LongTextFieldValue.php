@@ -63,4 +63,16 @@ class LongTextFieldValue extends FieldValue
 	{
 		return text_summary($this->safe_value, $this->format, $length);
 	}
+
+	/**
+	 * Gets a plaintext summary of the contents to a specified length.
+	 *
+	 * @param int $length The length to use. Defaults to null (Drupal default).
+	 *
+	 * @return string
+	 */
+	public function plain($length = null)
+	{
+		return text_summary(strip_tags($this->safe_value), $this->format, $length);
+	}
 }
