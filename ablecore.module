@@ -62,10 +62,19 @@ function ablecore_forms($form_id, $args)
 	return $result;
 }
 
+/**
+ * Implements hook_init()
+ */
 function ablecore_init()
 {
 	ablecore_custom_theme();
 }
+
+/**
+ * Implements hook_boot(). To let Drupal know we want the module to run during the
+ * bootstrap phase.
+ */
+function ablecore_boot() {}
 
 /**
  * Implements hook_custom_theme()
