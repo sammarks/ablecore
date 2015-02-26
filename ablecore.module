@@ -2,7 +2,6 @@
 
 use AbleCore\Modules\PathManager;
 use AbleCore\Internal\HookUtils;
-use Drupal\xautoload\FinderOperation\HookXautoloadOperation;
 
 // Require preprocessors that aren't handled by Able Core.
 require_once('preprocessors/node.inc');
