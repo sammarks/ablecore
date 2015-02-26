@@ -2,9 +2,10 @@
 
 namespace PHPSTORM_META {
 
-	/** @noinspection PhpUnusedLocalVariableInspection */                 // just to have a green code below
+	/** @noinspection PhpUnusedLocalVariableInspection */
 	/** @noinspection PhpIllegalArrayKeyTypeInspection */
-	$STATIC_METHOD_TYPES = [                                              // we make sections for scopes
+	/** @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
+	$STATIC_METHOD_TYPES = [
 		\AbleCore::helper('') => [
 			'HTML' instanceof \Drupal\ablecore\Helpers\HTML,
 			'Inflector' instanceof \Drupal\ablecore\Helpers\Inflector,
