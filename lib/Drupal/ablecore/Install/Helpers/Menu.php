@@ -1,6 +1,6 @@
 <?php
 
-namespace AbleCore\Install\Helpers;
+namespace Drupal\ablecore\Install\Helpers;
 
 class Menu {
 
