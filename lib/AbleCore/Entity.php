@@ -65,16 +65,59 @@ class Entity extends DrupalExtension {
 	 */
 	public static function loadWithType($entity_type, $entity_id)
 	{
-		$info = entity_get_info($entity_type);
-		if (!$info || empty($info['base table'])) {
-			throw new \Exception('The entity type ' . $entity_type . ' is invalid.');
-		}
+		$info = static::getEntityInfo($entity_type);
 
 		$query = db_select($info['base table'], 'entity')
 			->fields('entity')
 			->condition($info['entity keys']['id'], $entity_id)
 			->range(0, 1);
 		$result = $query->execute()->fetch();
+
+		return static::loadResultWithType($entity_type, $result, $entity_id);
+	}
+
+	/**
+	 * Given an array of entity IDs, loads all of them and returns an array of AbleCore
+	 * entity objects.
+	 *
+	 * @param string $entity_type The type of entity to load.
+	 * @param array  $entity_ids  An array of entity IDs to load.
+	 *
+	 * @return array An array of loaded AbleCore entities.
+	 */
+	public static function loadMultipleWithType($entity_type, array $entity_ids)
+	{
+		$info = static::getEntityInfo($entity_type);
+
+		$query = db_select($info['base table'], 'entity')
+			->fields('entity')
+			->condition($info['entity keys']['id'], $entity_ids, 'in');
+		$results = $query->execute();
+
+		$entities = array();
+		foreach ($results as $result) {
+			$id = $result->{$info['entity keys']['id']};
+			$entities[$id] = static::loadResultWithType($entity_type, $result, $id);
+		}
+
+		return $entities;
+	}
+
+	/**
+	 * Internal function. Given a result object from the database, loads that result and
+	 * returns the loaded entity. This handles edge cases like taxonomy terms, where the
+	 * bundle isn't included in the base table in the database.
+	 *
+	 * @param $entity_type
+	 * @param $result
+	 * @param $entity_id
+	 *
+	 * @return bool|static
+	 * @throws \Exception
+	 */
+	protected static function loadResultWithType($entity_type, $result, $entity_id)
+	{
+		$info = static::getEntityInfo($entity_type);
 
 		if ($result) {
 
@@ -90,6 +133,16 @@ class Entity extends DrupalExtension {
 		} else {
 			return false;
 		}
+	}
+
+	protected static function getEntityInfo($entity_type)
+	{
+		$info = entity_get_info($entity_type);
+		if (!$info || empty($info['base table'])) {
+			throw new \Exception('The entity type ' . $entity_type . ' is invalid.');
+		}
+
+		return $info;
 	}
 
 	/**
@@ -231,11 +284,50 @@ class Entity extends DrupalExtension {
 	 * @param \SelectQueryInterface $query       The query.
 	 * @param int                   $index       Passed to fetchCol(), represents the column to fetch.
 	 *
-	 * @return array An array of Entity objects.
+	 * @return array An array of Entity objects, keyed by their IDs.
 	 */
 	public static function mapQueryWithType($entity_type, \SelectQueryInterface $query, $index = 0)
 	{
-		return static::mapWithType($entity_type, $query->execute()->fetchCol($index));
+		return static::loadMultipleWithType($entity_type, $query->execute()->fetchCol($index));
+	}
+
+	/**
+	 * Given an Entity Field Query, will take the results and map them to AbleCore entities.
+	 * If the results set only contains one entity type (or there is one specified with the
+	 * $entity_type parameter), the function will return a single array of entities for that
+	 * entity type. If there are multiple entity types in the result set, it will return an
+	 * array of entity types, which contain arrays of their respective loaded entities.
+	 *
+	 * If $entity_type is provided and it does not exist in the query results, the function
+	 * returns an empty array. If there are no results from the Entity Field Query, the function
+	 * returns an empty array.
+	 *
+	 * @param \EntityFieldQuery $query        The EntityFieldQuery to map.
+	 * @param mixed             $entity_type  The entity type. If false is provided, guesses the entity
+	 *                                        type from the query.
+	 *
+	 * @return array|bool
+	 */
+	public static function mapEntityFieldQuery(\EntityFieldQuery $query, $entity_type = false)
+	{
+		$entities = $query->execute();
+		if ($entity_type !== false && array_key_exists($entity_type, $entities)) {
+			$entities = array($entity_type => $entities[$entity_type]);
+		} elseif ($entity_type !== false && !array_key_exists($entity_type, $entities)) {
+			return false;
+		}
+
+		if (count($entities) === 1) {
+			return static::loadMultipleWithType(key($entities), reset($entities));
+		} elseif (count($entities) > 1) {
+			$results = array();
+			foreach ($entities as $entity_type => $child_entities) {
+				$results[$entity_type] = static::loadMultipleWithType($entity_type, $child_entities);
+			}
+			return $results;
+		} else {
+			return false;
+		}
 	}
 
 	/**

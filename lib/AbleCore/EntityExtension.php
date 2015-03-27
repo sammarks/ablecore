@@ -97,11 +97,11 @@ abstract class EntityExtension extends Entity implements EntityExtensionInterfac
 	 *
 	 * @param array $entity_ids An ID of entity IDs to load.
 	 *
-	 * @return array The loaded entities.
+	 * @return array The loaded entities, keyed by entity ID.
 	 */
 	public static function map(array $entity_ids = array())
 	{
-		return static::mapWithType(static::getCurrentEntityType(), $entity_ids);
+		return static::loadMultipleWithType(self::getCurrentEntityType(), $entity_ids);
 	}
 
 	/**
