@@ -318,11 +318,11 @@ class Entity extends DrupalExtension {
 		}
 
 		if (count($entities) === 1) {
-			return static::loadMultipleWithType(key($entities), reset($entities));
+			return static::loadMultipleWithType(key($entities), array_keys(reset($entities)));
 		} elseif (count($entities) > 1) {
 			$results = array();
 			foreach ($entities as $entity_type => $child_entities) {
-				$results[$entity_type] = static::loadMultipleWithType($entity_type, $child_entities);
+				$results[$entity_type] = static::loadMultipleWithType($entity_type, array_keys($child_entities));
 			}
 			return $results;
 		} else {
