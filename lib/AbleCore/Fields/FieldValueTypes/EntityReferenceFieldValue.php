@@ -47,7 +47,11 @@ class EntityReferenceFieldValue extends FieldValue
 	public function __get($field)
 	{
 		if (!property_exists($this, $field)) {
-			return $this->raw_entity->$field;
+			if (is_object($this->raw_entity)) {
+				return $this->raw_entity->$field;
+			} else {
+				return false;
+			}
 		} else {
 			return $this->$field;
 		}
@@ -56,7 +60,11 @@ class EntityReferenceFieldValue extends FieldValue
 	public function __call($method, $args)
 	{
 		if (!method_exists($this, $method)) {
-			return call_user_func_array(array($this->raw_entity, $method), $args);
+			if (is_object($this->raw_entity)) {
+				return call_user_func_array(array($this->raw_entity, $method), $args);
+			} else {
+				return false;
+			}
 		} else {
 			return call_user_func_array(array($this, $method), $args);
 		}
@@ -64,6 +72,8 @@ class EntityReferenceFieldValue extends FieldValue
 
 	public function field($name)
 	{
+		if (!$this->raw_entity) return false;
+
 		$args = func_get_args();
 		array_shift($args);
 		$func_args = array($this->target_type, $this->raw_entity, $name);
