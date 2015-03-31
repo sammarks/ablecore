@@ -42,14 +42,19 @@ class Entity extends DrupalExtension {
 	 *
 	 * @param Entity|EntityReferenceFieldValue $entity The current entity object (or the field value).
 	 *
-	 * @return static The new entity object, promoted to the calling class.
+	 * @return static|bool The new entity object, promoted to the calling class or false if the
+	 *                     entity does not exist.
 	 */
 	public static function promote($entity)
 	{
 		if ($entity instanceof EntityReferenceFieldValue) {
 			$entity = $entity->raw_entity;
 		}
-		return new static($entity->type(), $entity->base, $entity->full_loaded);
+		if (is_object($entity)) {
+			return new static($entity->type(), $entity->base, $entity->full_loaded);
+		} else {
+			return false;
+		}
 	}
 
 	/**
