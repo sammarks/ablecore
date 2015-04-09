@@ -99,8 +99,18 @@ class Entity extends DrupalExtension {
 			->condition($info['entity keys']['id'], $entity_ids, 'in');
 		$results = $query->execute();
 
-		$entities = array();
+		// Get the flipped array to preserve order.
+		$flipped = array_flip($entity_ids);
+
+		$new_entity_results = array();
 		foreach ($results as $result) {
+			$id = $result->{$info['entity keys']['id']};
+			$new_entity_results[$flipped[$id]] = $result;
+		}
+		ksort($new_entity_results);
+
+		$entities = array();
+		foreach ($new_entity_results as $result) {
 			$id = $result->{$info['entity keys']['id']};
 			$entities[$id] = static::loadResultWithType($entity_type, $result, $id);
 		}
