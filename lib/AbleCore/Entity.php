@@ -92,6 +92,11 @@ class Entity extends DrupalExtension {
 	 */
 	public static function loadMultipleWithType($entity_type, array $entity_ids)
 	{
+		// If no entity IDs were passed, just return an empty array.
+		if (count($entity_ids) <= 0) {
+			return array();
+		}
+
 		$info = static::getEntityInfo($entity_type);
 
 		$query = db_select($info['base table'], 'entity')
