@@ -38,6 +38,22 @@ function ablecore_theme()
 	return $themes;
 }
 
+/**
+ * Implements hook_element_info()
+ */
+function ablecore_element_info()
+{
+	$types['table'] = array(
+		'#theme' => 'table',
+		'#tree' => true,
+		'#header' => array(),
+		'#rows' => array(),
+		'#process' => array('form_type_table_process'),
+	);
+
+	return $types;
+}
+
 function ablecore_permission()
 {
 	return array(
