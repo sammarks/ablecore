@@ -88,4 +88,51 @@ class FieldValueCollection extends \ArrayObject
 		}
 		return $unique_items;
 	}
+
+	/**
+	 * Runs each of the items in the collection through a callback function,
+	 * returning the values that each of the callback function invocations
+	 * return.
+	 *
+	 * @param callable $callback The callback to call ($item) is passed as an
+	 *                           argument to the function.
+	 *
+	 * @return array The results of each of the callbacks.
+	 */
+	public function map(callable $callback)
+	{
+		$result = array();
+		foreach ($this as $item) {
+			$result[] = $callback($item);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Joins the string-equivalent of each of the items in this
+	 * collection with the specified separator.
+	 *
+	 * If a callback is passed, it will use that callback to get the
+	 * value of each of the fields instead of just taking the string
+	 * representation. @see map() for more information on how to use
+	 * the callback.
+	 *
+	 * @param string   $separator The string to separate the items with.
+	 * @param callable $callback  The callback to use when getting the
+	 *                            values of each of the fields.
+	 *
+	 * @return string The resulting string.
+	 */
+	public function join($separator = ', ', callable $callback = null)
+	{
+		if ($callback === null) {
+			$callback = function ($item) {
+				return (string)$item;
+			};
+		}
+		$items = $this->map($callback);
+
+		return implode($separator, $items);
+	}
 }
