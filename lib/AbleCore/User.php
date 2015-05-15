@@ -49,7 +49,7 @@ class User extends EntityExtension
 	public static function check()
 	{
 		global $user;
-		return ($user->uid);
+		return ($user->uid == true);
 	}
 
 	/**
