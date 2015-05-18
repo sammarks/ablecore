@@ -249,7 +249,7 @@ class Menu
 		if (array_search('menu', $this->classes) === false) {
 			$this->classes[] = 'menu';
 		}
-		$attributes['class'] = implode(' ', $this->classes);
+		$attributes['class'] = $this->classes;
 		if ($this->id) {
 			$attributes['id'] = $this->id;
 		}
