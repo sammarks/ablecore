@@ -50,6 +50,14 @@ function ablecore_element_info()
 		'#rows' => array(),
 		'#process' => array('form_type_table_process'),
 	);
+	$types['columns'] = array(
+		'#process' => array('form_process_container'),
+		'#pre_render' => array('ablecore_columns_pre_render'),
+		'#num_columns' => 3,
+		'#container_classes' => array('column-container'),
+		'#column_classes' => array('column'),
+		'#theme_wrappers' => array('container'),
+	);
 
 	return $types;
 }
