@@ -78,7 +78,7 @@ class User extends EntityExtension
 	 */
 	public function role($role)
 	{
-		if (!empty($this->base->roles) && is_array($this->base_roles)) {
+		if (!empty($this->base->roles) && is_array($this->base->roles)) {
 			return array_search($role, $this->base->roles) !== false;
 		} else return false;
 	}
