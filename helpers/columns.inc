@@ -13,6 +13,8 @@ function ablecore_columns_pre_render($element)
 					'#tag' => 'li',
 					'#value' => $item,
 				);
+			} elseif (array_key_exists('#children', $item)) {
+				$element[] = array('#markup' => $item['#children']);
 			} else {
 				$element[] = $item;
 			}
