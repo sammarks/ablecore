@@ -114,6 +114,9 @@ class FieldValueRegistry
 			);
 		}
 
+		// Make sure the value collection is not null.
+		if (!array_filter($valueCollection->getArrayCopy())) return null;
+
 		return $valueCollection;
 	}
 
