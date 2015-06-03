@@ -62,9 +62,7 @@ class User extends EntityExtension
 	 */
 	public function admin()
 	{
-		if (!empty($this->base->roles) && is_array($this->base->roles)) {
-			return array_search('administrator', $this->base->roles) !== false;
-		} else return false;
+		return $this->role('administrator');
 	}
 
 	/**
@@ -80,7 +78,22 @@ class User extends EntityExtension
 	 */
 	public function role($role)
 	{
-		return user_access($role, $this->base);
+		if (!empty($this->base->roles) && is_array($this->base_roles)) {
+			return array_search($role, $this->base->roles) !== false;
+		} else return false;
+	}
+
+	/**
+	 * Determines whether or not the loaded user has access to the specified
+	 * permission.
+	 *
+	 * @param string $permission The name of the permission to check for.
+	 *
+	 * @return bool
+	 */
+	public function access($permission)
+	{
+		return user_access($permission, $this->base);
 	}
 
 }
