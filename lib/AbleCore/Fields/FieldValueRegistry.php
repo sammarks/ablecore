@@ -2,8 +2,6 @@
 
 namespace AbleCore\Fields;
 
-use AbleCore\Fields\FieldValueCollection;
-
 class FieldValueRegistry
 {
 	private static $prepared = false;
