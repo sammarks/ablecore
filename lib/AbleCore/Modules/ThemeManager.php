@@ -86,24 +86,11 @@ class ThemeManager
 	 */
 	public function define($key, $additional_configuration = array())
 	{
+		$this->generated[$key] = $this->getBaseConfiguration();
+
 		// Generate the template path.
 		$generated_path = str_replace('_', '-', $key);
-
-		$module = $this->getModule();
-		if (!$module) {
-			throw new \Exception('A module name could not be found when adding the theme. You might have to specify it manually.');
-		}
-
-		$this->generated[$key] = array(
-			'template' => $generated_path,
-			'render element' => 'element',
-
-			// Trick Drupal into sending some information that identifies this theme
-			// as an Able Core theme so that we can perform some extra file-checking
-			// magic inside hook_theme_registry_alter. The variable is removed inside
-			// hook_theme_registry_alter.
-			'variables' => array('ablecore' => array('module' => $module))
-		);
+		$this->generated[$key]['template'] = $generated_path;
 
 		$this->generated[$key] = array_replace_recursive($this->generated[$key], $additional_configuration);
 
@@ -126,13 +113,38 @@ class ThemeManager
 	 */
 	public function defineFunction($key, $render_element, $file, $additional_configuration = array())
 	{
-		$this->generated[$key] = array(
-			'render element' => $render_element,
-			'file' => $file,
-		);
+		$this->generated[$key] = $this->getBaseConfiguration($render_element);
+		$this->generated[$key]['file'] = $file;
+
 		$this->generated[$key] = array_replace_recursive($this->generated[$key], $additional_configuration);
 
 		return $this;
+	}
+
+	/**
+	 * Gets the base configuration array for any Able Core-created theme hook.
+	 *
+	 * @param string $render_element The render element to use in the theme hook.
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	protected function getBaseConfiguration($render_element = 'element')
+	{
+		$module = $this->getModule();
+		if (!$module) {
+			throw new \Exception('A module name could not be found when adding the theme. You might have to specify it manually.');
+		}
+
+		return array(
+			'render element' => $render_element,
+
+			// Trick Drupal into sending some information that identifies this theme
+			// as an Able Core theme so that we can perform some extra file-checking
+			// magic inside hook_theme_registry_alter. The variable is removed inside
+			// hook_theme_registry_alter.
+			'variables' => array('ablecore' => array('module' => $module))
+		);
 	}
 
 	/**
