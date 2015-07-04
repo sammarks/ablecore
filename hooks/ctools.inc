@@ -10,5 +10,5 @@ function ablecore_ctools_plugin_directory($module, $plugin)
 		return $configurations[$module][$plugin];
 	}
 
-	return null;
+	return array();
 }
