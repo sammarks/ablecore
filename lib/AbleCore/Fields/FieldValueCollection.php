@@ -68,7 +68,7 @@ class FieldValueCollection extends \ArrayObject
 		}
 	}
 
-	public function range($offset, $length)
+	public function range($offset, $length = null)
 	{
 		return array_slice($this->getArrayCopy(), $offset, $length);
 	}
