@@ -11,7 +11,7 @@ function ablecore_preprocess_html_tag(&$variables)
 	// so we should be able to keep it.
 
 	foreach (element_children($variables['element']) as $key) {
-		if ($variables['element']['#value'] === null) {
+		if (empty($variables['element']['#value'])) {
 			$variables['element']['#value'] = '';
 		}
 		$variables['element']['#value'] .= drupal_render($variables['element'][$key]);
