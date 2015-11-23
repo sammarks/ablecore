@@ -4,6 +4,13 @@ namespace AbleCore\Modules;
 
 abstract class Crud implements CrudInterface {
 
+	/**
+	 * The keys to serialize/unserialize automatically when saving/loading to/from
+	 * the database.
+	 * @var array
+	 */
+	protected $serialized = array();
+
 	protected static function getPrimaryKey()
 	{
 		$schema = drupal_get_schema(self::getTableNameInternal());
@@ -103,7 +110,11 @@ abstract class Crud implements CrudInterface {
 	{
 		$class = get_called_class();
 		$instance = new $class();
+		$serialized = $instance->serialized;
 		foreach ($values as $key => $value) {
+			if (in_array($key, $serialized)) {
+				$value = unserialize($value);
+			}
 			$instance->$key = $value;
 		}
 
@@ -129,7 +140,18 @@ abstract class Crud implements CrudInterface {
 		if ($force_new === true) {
 			$primary_keys = array();
 		}
-		return drupal_write_record(self::getTableNameInternal(), $this, $primary_keys);
+
+		// Create a clone.
+		$save_clone = clone $this;
+		foreach (get_object_vars($save_clone) as $key => $value) {
+			if (in_array($key, $this->serialized)) {
+				$save_clone->$key = serialize($value);
+			}
+		}
+
+		$result = drupal_write_record(self::getTableNameInternal(), $save_clone, $primary_keys);
+
+		$this->$primary_key = $save_clone->$primary_key;
 	}
 
 	/**
