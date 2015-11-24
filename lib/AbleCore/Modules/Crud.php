@@ -69,7 +69,7 @@ abstract class Crud implements CrudInterface {
 	 * @param int  $identifier The ID of the instance to load.
 	 * @param bool $reset      Whether or not to reset the static cache.
 	 *
-	 * @return bool|Crud false if the instance wasn't found. Else, the object.
+	 * @return static false if the instance wasn't found. Else, the object.
 	 * @throws \Exception
 	 */
 	public static function load($identifier, $reset = false)
@@ -104,7 +104,7 @@ abstract class Crud implements CrudInterface {
 	 *
 	 * @param array $values The values to use for the import.
 	 *
-	 * @return Crud
+	 * @return static
 	 */
 	public static function import(array $values)
 	{
