@@ -126,7 +126,7 @@ function ablecore_modules_installed(array $modules, $install = true)
 	// Make sure the HookUtils class exists (and that xautoload is actually working
 	// as intended).
 	if (!class_exists('AbleCore\Internal\HookUtils')) {
-		ablecore_manual_include();
+		xautoload_modules_enabled(array('ablecore'));
 	};
 
 	$ablecore_modules = HookUtils::getAbleCoreModules();
@@ -147,16 +147,6 @@ function ablecore_modules_installed(array $modules, $install = true)
 				}
 			}
 		}
-	}
-}
-
-/**
- * Manually includes all AbleCore library files (in the case that xautoload is not working).
- */
-function ablecore_manual_include()
-{
-	foreach (file_scan_directory(DRUPAL_ROOT . '/' . drupal_get_path('module', 'ablecore') . '/lib/AbleCore', '/.*\.php$/') as $file) {
-		require_once $file->uri;
 	}
 }
 
