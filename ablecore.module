@@ -123,6 +123,10 @@ function ablecore_modules_installed(array $modules, $install = true)
 	// We don't need to handle this if no modules were actually installed...
 	if (count($modules) <= 0) return;
 
+	// Make sure the HookUtils class exists (and that xautoload is actually working
+	// as intended).
+	if (!class_exists('AbleCore\Internal\HookUtils')) return;
+
 	$ablecore_modules = HookUtils::getAbleCoreModules();
 	foreach ($modules as $module) {
 		if (array_search($module, $ablecore_modules) !== false) {
