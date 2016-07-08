@@ -221,9 +221,8 @@ function ablecore_theme_registry_alter(&$registry)
 		$segments = explode('/', $path);
 		$filename = array_pop($segments);
 
-
 		// Get the module path.
-        $module_path = dirname(drupal_get_filename('module', $module, NULL, FALSE));
+		$module_path = dirname(drupal_get_filename('module', $module, NULL, FALSE));
 
 		// Prepare preprocessor paths.
 		$preprocess_filename = '/' . preg_quote($filename . '.php') . '/';
